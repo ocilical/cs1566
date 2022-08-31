@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "strict": true,
-        "noEmitOnError": true
+        "noEmitOnError": true,
+        "newLine": "lf"
     },
     "include": ["src/**/*"]
 }
