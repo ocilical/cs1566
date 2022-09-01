@@ -19,6 +19,10 @@ function matCheck(m: mat4): void {
     }
 }
 
+function vecArrToPacked(v: vec4[]): Float32Array {
+    return new Float32Array(v.flat());
+}
+
 /**
  * print a vector
  */
