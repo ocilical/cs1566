@@ -15,6 +15,9 @@ function matCheck(m) {
         throw new Error("matrix must be 4x4");
     }
 }
+function vecArrToPacked(v) {
+    return new Float32Array(v.flat());
+}
 /**
  * print a vector
  */
