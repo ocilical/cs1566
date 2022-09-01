@@ -2,7 +2,7 @@
 /**
  * check if a vector is big enough, not sure if i'll need this?
  */
-function vec_check(v) {
+function vecCheck(v) {
     if (v.length < 4) {
         throw new Error("vector must be at least 4 elements");
     }
@@ -10,7 +10,7 @@ function vec_check(v) {
 /**
  * check if a matrix is big enough, not sure if i'll need this?
  */
-function mat_check(m) {
+function matCheck(m) {
     if (m.length < 4 || m[0].length < 4 || m[1].length < 4 || m[2].length < 4 || m[3].length < 4) {
         throw new Error("matrix must be 4x4");
     }
@@ -18,13 +18,13 @@ function mat_check(m) {
 /**
  * print a vector
  */
-function vec_print(v) {
+function vecPrint(v) {
     console.log(`[${v[0].toFixed(4)}, ${v[1].toFixed(4)}, ${v[2].toFixed(4)}, ${v[3].toFixed(4)}]`);
 }
 /**
  * multiply a vector by a scalar, s * v
  */
-function vec_scale(s, v) {
+function vecScale(s, v) {
     return [
         s * v[0],
         s * v[1],
@@ -35,7 +35,7 @@ function vec_scale(s, v) {
 /**
  * add two vectors, v1 + v2
  */
-function vec_add(v1, v2) {
+function vecAdd(v1, v2) {
     return [
         v1[0] + v2[0],
         v1[1] + v2[1],
@@ -46,7 +46,7 @@ function vec_add(v1, v2) {
 /**
  * subtract two vectors, v1 - v2
  */
-function vec_sub(v1, v2) {
+function vecSub(v1, v2) {
     return [
         v1[0] - v2[0],
         v1[1] - v2[1],
@@ -57,7 +57,7 @@ function vec_sub(v1, v2) {
 /**
  * calculate magnitude of a vector
  */
-function vec_length(v) {
+function vecLength(v) {
     return Math.sqrt(v[0] * v[0] +
         v[1] * v[1] +
         v[2] * v[2] +
@@ -66,13 +66,13 @@ function vec_length(v) {
 /**
  * caluclate a normalized vector
  */
-function vec_norm(v) {
-    return vec_scale(1.0 / vec_length(v), v);
+function vecNorm(v) {
+    return vecScale(1.0 / vecLength(v), v);
 }
 /**
  * calculate the dot product of two vectors
  */
-function vec_dot(v1, v2) {
+function vecDot(v1, v2) {
     return ((v1[0] * v2[0]) +
         (v1[1] * v2[1]) +
         (v1[2] * v2[2]) +
@@ -81,7 +81,7 @@ function vec_dot(v1, v2) {
 /**
  * calculate the cross product of two vectors
  */
-function vec_cross(v1, v2) {
+function vecCross(v1, v2) {
     return [
         (v1[1] * v2[2]) - (v1[2] * v2[1]),
         (v1[2] * v2[0]) - (v1[0] * v2[2]),
@@ -92,7 +92,7 @@ function vec_cross(v1, v2) {
 /**
  * print a matrix
  */
-function mat_print(m) {
+function matPrint(m) {
     console.log(`${m[0][0]} ${m[1][0]} ${m[2][0]} ${m[3][0]}\n` +
         `${m[0][1]} ${m[1][1]} ${m[2][1]} ${m[3][1]}\n` +
         `${m[0][2]} ${m[1][2]} ${m[2][2]} ${m[3][2]}\n` +
@@ -101,23 +101,23 @@ function mat_print(m) {
 /**
  * multiply a matrix by a scalar, s * m
  */
-function mat_scale(s, m) {
+function matScale(s, m) {
     return [
-        vec_scale(s, m[0]),
-        vec_scale(s, m[1]),
-        vec_scale(s, m[2]),
-        vec_scale(s, m[3]),
+        vecScale(s, m[0]),
+        vecScale(s, m[1]),
+        vecScale(s, m[2]),
+        vecScale(s, m[3]),
     ];
 }
 /**
  * add two matrices, m1 + m2
  */
-function mat_add(m1, m2) {
+function matAdd(m1, m2) {
     return [
-        vec_add(m1[0], m2[0]),
-        vec_add(m1[1], m2[1]),
-        vec_add(m1[2], m2[2]),
-        vec_add(m1[3], m2[3]),
+        vecAdd(m1[0], m2[0]),
+        vecAdd(m1[1], m2[1]),
+        vecAdd(m1[2], m2[2]),
+        vecAdd(m1[3], m2[3]),
     ];
 }
 /**
@@ -125,37 +125,37 @@ function mat_add(m1, m2) {
  */
 function mat_sub(m1, m2) {
     return [
-        vec_sub(m1[0], m2[0]),
-        vec_sub(m1[1], m2[1]),
-        vec_sub(m1[2], m2[2]),
-        vec_sub(m1[3], m2[3]),
+        vecSub(m1[0], m2[0]),
+        vecSub(m1[1], m2[1]),
+        vecSub(m1[2], m2[2]),
+        vecSub(m1[3], m2[3]),
     ];
 }
 /**
  * multiply a vector with a matrix, m * V
  */
-function mat_vec_mul(m, v) {
-    let v0 = vec_scale(v[0], m[0]);
-    let v1 = vec_scale(v[1], m[1]);
-    let v2 = vec_scale(v[2], m[2]);
-    let v3 = vec_scale(v[3], m[3]);
-    return vec_add(vec_add(v0, v1), vec_add(v2, v3));
+function matVecMul(m, v) {
+    let v0 = vecScale(v[0], m[0]);
+    let v1 = vecScale(v[1], m[1]);
+    let v2 = vecScale(v[2], m[2]);
+    let v3 = vecScale(v[3], m[3]);
+    return vecAdd(vecAdd(v0, v1), vecAdd(v2, v3));
 }
 /**
  * multiply two matrices, m1 * m2
  */
-function mat_mul(m1, m2) {
+function matMul(m1, m2) {
     return [
-        mat_vec_mul(m1, m2[0]),
-        mat_vec_mul(m1, m2[1]),
-        mat_vec_mul(m1, m2[2]),
-        mat_vec_mul(m1, m2[3]),
+        matVecMul(m1, m2[0]),
+        matVecMul(m1, m2[1]),
+        matVecMul(m1, m2[2]),
+        matVecMul(m1, m2[3]),
     ];
 }
 /**
  * calculate transpose of a matrix
  */
-function mat_trans(m) {
+function matTrans(m) {
     return [
         [m[0][0], m[1][0], m[2][0], m[3][0]],
         [m[0][1], m[1][1], m[2][1], m[3][1]],
@@ -166,7 +166,7 @@ function mat_trans(m) {
 /**
  * calculate inverse of a matrix
  */
-function mat_inv(m) {
+function matInv(m) {
     // todo: implement this
     return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 }
