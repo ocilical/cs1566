@@ -167,6 +167,6 @@ function mat_trans(m) {
  * calculate inverse of a matrix
  */
 function mat_inv(m) {
-    //todo: implement this
+    // todo: implement this
     return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 }

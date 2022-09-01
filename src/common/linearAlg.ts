@@ -192,6 +192,6 @@ function mat_trans(m: mat4): mat4 {
  * calculate inverse of a matrix
  */
 function mat_inv(m: mat4): mat4 {
-    //todo: implement this
-    return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    // todo: implement this
+    return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 }
