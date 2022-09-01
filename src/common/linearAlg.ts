@@ -141,7 +141,7 @@ function matAdd(m1: mat4, m2: mat4): mat4 {
         vecAdd(m1[1], m2[1]),
         vecAdd(m1[2], m2[2]),
         vecAdd(m1[3], m2[3]),
-    ]
+    ];
 }
 
 /**
@@ -153,17 +153,17 @@ function mat_sub(m1: mat4, m2: mat4): mat4 {
         vecSub(m1[1], m2[1]),
         vecSub(m1[2], m2[2]),
         vecSub(m1[3], m2[3]),
-    ]
+    ];
 }
 
 /**
  * multiply a vector with a matrix, m * V
  */
 function matVecMul(m: mat4, v: vec4): vec4 {
-    let v0 = vecScale(v[0], m[0])
-    let v1 = vecScale(v[1], m[1])
-    let v2 = vecScale(v[2], m[2])
-    let v3 = vecScale(v[3], m[3])
+    let v0 = vecScale(v[0], m[0]);
+    let v1 = vecScale(v[1], m[1]);
+    let v2 = vecScale(v[2], m[2]);
+    let v3 = vecScale(v[3], m[3]);
 
     return vecAdd(vecAdd(v0, v1), vecAdd(v2, v3));
 }
@@ -189,7 +189,7 @@ function matTrans(m: mat4): mat4 {
         [m[0][1], m[1][1], m[2][1], m[3][1]],
         [m[0][2], m[1][2], m[2][2], m[3][2]],
         [m[0][3], m[1][3], m[2][3], m[3][3]],
-    ]
+    ];
 }
 
 /**
