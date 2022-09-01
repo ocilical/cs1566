@@ -1,4 +1,4 @@
 "use strict";
-var thing = 3.14;
+let thing = 3.14;
 // hiiii~
-console.log("hewe's a numbew uwu~~ ".concat(thing));
+console.log(`hewe's a numbew uwu~~ ${thing}`);
