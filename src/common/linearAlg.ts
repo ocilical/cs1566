@@ -1,8 +1,14 @@
 type vec4 = [number, number, number, number];
 type mat4 = [vec4, vec4, vec4, vec4];
 
-// these are only used for calculating a minor matrix
+
+/**
+ * only used for calculating a minor matrix
+ */
 type vec3 = [number, number, number];
+/**
+ * only used for calculating a minor matrix
+ */
 type mat3 = [vec3, vec3, vec3];
 
 /**
