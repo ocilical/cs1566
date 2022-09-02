@@ -1,14 +1,9 @@
 type vec4 = [number, number, number, number];
 type mat4 = [vec4, vec4, vec4, vec4];
 
-
-/**
- * only used for calculating a minor matrix
- */
+/** only used for calculating a minor matrix */
 type vec3 = [number, number, number];
-/**
- * only used for calculating a minor matrix
- */
+/** only used for calculating a minor matrix */
 type mat3 = [vec3, vec3, vec3];
 
 /**
@@ -212,9 +207,9 @@ function matInv(m: mat4): mat4 {
     let determinant = matDet(m, minor);
     if (determinant == 0) {
         throw new Error("matrix is not invertable");
-    }   
+    }
     return matScale(1 /
-         determinant, transpose);
+        determinant, transpose);
 }
 
 /**
@@ -276,11 +271,11 @@ function matDet(m: mat4, minor: mat4): number {
  */
 function mat3Det(m: mat3): number {
     return (
-        m[0][0] * m[1][1] * m[2][2]
-        + m[1][0] * m[2][1] * m[0][2]
-        + m[2][0] * m[0][1] * m[1][2]
-        - m[0][2] * m[1][1] * m[2][0]
-        - m[1][2] * m[2][1] * m[0][0]
-        - m[2][2] * m[0][1] * m[1][0]
+        m[0][0] * m[1][1] * m[2][2] +
+        m[1][0] * m[2][1] * m[0][2] +
+        m[2][0] * m[0][1] * m[1][2] -
+        m[0][2] * m[1][1] * m[2][0] - 
+        m[1][2] * m[2][1] * m[0][0] - 
+        m[2][2] * m[0][1] * m[1][0]
     );
 }
