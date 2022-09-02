@@ -96,10 +96,10 @@ function vecCross(v1, v2) {
  * print a matrix
  */
 function matPrint(m) {
-    console.log(`${m[0][0]} ${m[1][0]} ${m[2][0]} ${m[3][0]}\n` +
-        `${m[0][1]} ${m[1][1]} ${m[2][1]} ${m[3][1]}\n` +
-        `${m[0][2]} ${m[1][2]} ${m[2][2]} ${m[3][2]}\n` +
-        `${m[0][3]} ${m[1][3]} ${m[2][3]} ${m[3][3]}\n`);
+    console.log(`${m[0][0].toFixed(4)} ${m[1][0].toFixed(4)} ${m[2][0].toFixed(4)} ${m[3][0].toFixed(4)}\n` +
+        `${m[0][1].toFixed(4)} ${m[1][1].toFixed(4)} ${m[2][1].toFixed(4)} ${m[3][1].toFixed(4)}\n` +
+        `${m[0][2].toFixed(4)} ${m[1][2].toFixed(4)} ${m[2][2].toFixed(4)} ${m[3][2].toFixed(4)}\n` +
+        `${m[0][3].toFixed(4)} ${m[1][3].toFixed(4)} ${m[2][3].toFixed(4)} ${m[3][3].toFixed(4)}\n`);
 }
 /**
  * multiply a matrix by a scalar, s * m
@@ -170,6 +170,74 @@ function matTrans(m) {
  * calculate inverse of a matrix
  */
 function matInv(m) {
-    // todo: implement this
-    return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+    let minor = matMinor(m);
+    let cofactor = matCofactor(minor);
+    let transpose = matTrans(cofactor);
+    let determinant = matDet(m, minor);
+    if (determinant == 0) {
+        throw new Error("matrix is not invertable");
+    }
+    return matScale(1 /
+        determinant, transpose);
+}
+/**
+ * calculate minor matrix
+ */
+function matMinor(m) {
+    return [
+        [
+            mat3Det([[m[1][1], m[1][2], m[1][3]], [m[2][1], m[2][2], m[2][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][2], m[1][3]], [m[2][0], m[2][2], m[2][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][1], m[1][3]], [m[2][0], m[2][1], m[2][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][1], m[1][2]], [m[2][0], m[2][1], m[2][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[2][1], m[2][2], m[2][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[2][0], m[2][2], m[2][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[2][0], m[2][1], m[2][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[2][0], m[2][1], m[2][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[1][1], m[1][2], m[1][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[1][0], m[1][2], m[1][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[1][0], m[1][1], m[1][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[1][0], m[1][1], m[1][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[1][1], m[1][2], m[1][3]], [m[2][1], m[2][2], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[1][0], m[1][2], m[1][3]], [m[2][0], m[2][2], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[1][0], m[1][1], m[1][3]], [m[2][0], m[2][1], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[1][0], m[1][1], m[1][2]], [m[2][0], m[2][1], m[2][2]]]),
+        ],
+    ];
+}
+/**
+ * calculate cofactor of a matrix
+ */
+function matCofactor(m) {
+    return [
+        [m[0][0], -m[0][1], m[0][2], -m[0][3]],
+        [-m[1][0], m[1][1], -m[1][2], m[1][3]],
+        [m[2][0], -m[2][1], m[2][2], -m[2][3]],
+        [-m[3][0], m[3][1], -m[3][2], m[3][3]],
+    ];
+}
+/**
+ * calculate determinant of a matrix,
+ * m is the matrix to find the det of,
+ * minor is the minor matrix of m
+ */
+function matDet(m, minor) {
+    return m[0][0] * minor[0][0] - m[0][1] * minor[0][1] + m[0][2] * minor[0][2] - m[0][3] * minor[0][3];
+}
+/**
+ * calculate determinant of a 3x3 matrix
+ */
+function mat3Det(m) {
+    return (m[0][0] * m[1][1] * m[2][2]
+        + m[1][0] * m[2][1] * m[0][2]
+        + m[2][0] * m[0][1] * m[1][2]
+        - m[0][2] * m[1][1] * m[2][0]
+        - m[1][2] * m[2][1] * m[0][0]
+        - m[2][2] * m[0][1] * m[1][0]);
 }

@@ -1,6 +1,10 @@
 type vec4 = [number, number, number, number];
 type mat4 = [vec4, vec4, vec4, vec4];
 
+// these are only used for calculating a minor matrix
+type vec3 = [number, number, number];
+type mat3 = [vec3, vec3, vec3];
+
 /**
  * check if a vector is big enough, not sure if i'll need this?
  */
@@ -196,6 +200,81 @@ function matTrans(m: mat4): mat4 {
  * calculate inverse of a matrix
  */
 function matInv(m: mat4): mat4 {
-    // todo: implement this
-    return [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+    let minor = matMinor(m);
+    let cofactor = matCofactor(minor);
+    let transpose = matTrans(cofactor);
+    let determinant = matDet(m, minor);
+    if (determinant == 0) {
+        throw new Error("matrix is not invertable");
+    }   
+    return matScale(1 /
+         determinant, transpose);
+}
+
+/**
+ * calculate minor matrix
+ */
+function matMinor(m: mat4): mat4 {
+    return [
+        [
+            mat3Det([[m[1][1], m[1][2], m[1][3]], [m[2][1], m[2][2], m[2][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][2], m[1][3]], [m[2][0], m[2][2], m[2][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][1], m[1][3]], [m[2][0], m[2][1], m[2][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[1][0], m[1][1], m[1][2]], [m[2][0], m[2][1], m[2][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[2][1], m[2][2], m[2][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[2][0], m[2][2], m[2][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[2][0], m[2][1], m[2][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[2][0], m[2][1], m[2][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[1][1], m[1][2], m[1][3]], [m[3][1], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[1][0], m[1][2], m[1][3]], [m[3][0], m[3][2], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[1][0], m[1][1], m[1][3]], [m[3][0], m[3][1], m[3][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[1][0], m[1][1], m[1][2]], [m[3][0], m[3][1], m[3][2]]]),
+        ],
+        [
+            mat3Det([[m[0][1], m[0][2], m[0][3]], [m[1][1], m[1][2], m[1][3]], [m[2][1], m[2][2], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][2], m[0][3]], [m[1][0], m[1][2], m[1][3]], [m[2][0], m[2][2], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][3]], [m[1][0], m[1][1], m[1][3]], [m[2][0], m[2][1], m[2][3]]]),
+            mat3Det([[m[0][0], m[0][1], m[0][2]], [m[1][0], m[1][1], m[1][2]], [m[2][0], m[2][1], m[2][2]]]),
+        ],
+    ];
+}
+
+/**
+ * calculate cofactor of a matrix
+ */
+function matCofactor(m: mat4): mat4 {
+    return [
+        [m[0][0], -m[0][1], m[0][2], -m[0][3]],
+        [-m[1][0], m[1][1], -m[1][2], m[1][3]],
+        [m[2][0], -m[2][1], m[2][2], -m[2][3]],
+        [-m[3][0], m[3][1], -m[3][2], m[3][3]],
+    ];
+}
+
+/**
+ * calculate determinant of a matrix,
+ * m is the matrix to find the det of,
+ * minor is the minor matrix of m
+ */
+function matDet(m: mat4, minor: mat4): number {
+    return m[0][0] * minor[0][0] - m[0][1] * minor[0][1] + m[0][2] * minor[0][2] - m[0][3] * minor[0][3];
+}
+
+
+/**
+ * calculate determinant of a 3x3 matrix
+ */
+function mat3Det(m: mat3): number {
+    return (
+        m[0][0] * m[1][1] * m[2][2]
+        + m[1][0] * m[2][1] * m[0][2]
+        + m[2][0] * m[0][1] * m[1][2]
+        - m[0][2] * m[1][1] * m[2][0]
+        - m[1][2] * m[2][1] * m[0][0]
+        - m[2][2] * m[0][1] * m[1][0]
+    );
 }
