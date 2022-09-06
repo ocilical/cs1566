@@ -24,6 +24,9 @@ function matCheck(m: mat4): void {
     }
 }
 
+/**
+ * convert array of vec4s to Float32Array (works on mat4)
+ */
 function vecArrToPacked(v: vec4[]): Float32Array {
     return new Float32Array(v.flat());
 }
