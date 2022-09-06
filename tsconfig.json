@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2016",
-        "lib" : [
+        "lib": [
             "es2019",
             "DOM"
         ],
@@ -9,5 +9,7 @@
         "noEmitOnError": true,
         "newLine": "lf"
     },
-    "include": ["src/**/*"]
+    "include": [
+        "src/**/*"
+    ]
 }

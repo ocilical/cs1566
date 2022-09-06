@@ -126,7 +126,7 @@ function matAdd(m1, m2) {
 /**
  * subtract two matrices, m1 - m2
  */
-function mat_sub(m1, m2) {
+function matSub(m1, m2) {
     return [
         vecSub(m1[0], m2[0]),
         vecSub(m1[1], m2[1]),

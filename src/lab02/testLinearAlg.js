@@ -44,7 +44,7 @@ matPrint(matScale(s, m1));
 console.log("m1 + m2:");
 matPrint(matAdd(m1, m2));
 console.log("m1 - m2:");
-matPrint(mat_sub(m1, m2));
+matPrint(matSub(m1, m2));
 console.log("m1 * m2:");
 matPrint(matMul(m1, m2));
 console.log("m1^T (transpose):");
