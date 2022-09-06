@@ -177,8 +177,7 @@ function matInv(m) {
     if (determinant == 0) {
         throw new Error("matrix is not invertable");
     }
-    return matScale(1 /
-        determinant, transpose);
+    return matScale(1 / determinant, transpose);
 }
 /**
  * calculate minor matrix

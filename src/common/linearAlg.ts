@@ -208,8 +208,7 @@ function matInv(m: mat4): mat4 {
     if (determinant == 0) {
         throw new Error("matrix is not invertable");
     }
-    return matScale(1 /
-        determinant, transpose);
+    return matScale(1 / determinant, transpose);
 }
 
 /**
