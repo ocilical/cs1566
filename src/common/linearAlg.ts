@@ -78,12 +78,7 @@ function vecSub(v1: vec4, v2: vec4): vec4 {
  * calculate magnitude of a vector
  */
 function vecLength(v: vec4): number {
-    return Math.sqrt(
-        v[0] * v[0] +
-        v[1] * v[1] +
-        v[2] * v[2] +
-        v[3] * v[3]
-    );
+    return Math.sqrt(vecDot(v, v));
 }
 
 /**
@@ -97,12 +92,7 @@ function vecNorm(v: vec4): vec4 {
  * calculate the dot product of two vectors
  */
 function vecDot(v1: vec4, v2: vec4): number {
-    return (
-        (v1[0] * v2[0]) +
-        (v1[1] * v2[1]) +
-        (v1[2] * v2[2]) +
-        (v1[3] * v2[3])
-    );
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2] + v1[3] * v2[3];
 }
 
 /**
@@ -137,7 +127,7 @@ function matScale(s: number, m: mat4): mat4 {
         vecScale(s, m[1]),
         vecScale(s, m[2]),
         vecScale(s, m[3]),
-    ]
+    ];
 }
 
 /**
