@@ -161,10 +161,12 @@ function idle() {
     else if (triangle_position <= -0.5)
         position_modifier = 0.01;
 
-    middle_triangle_ctm = [[1.0, 0.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0, 0.0],
-    [0.0, 0.0, 1.0, 0.0],
-    [triangle_position, 0.0, 0.0, 1.0]];
+    middle_triangle_ctm = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [triangle_position, 0.0, 0.0, 1.0]
+    ];
 
     // Calculate ctm for the top-right triangle
     triangle_degree += 0.1;
