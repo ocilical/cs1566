@@ -15,6 +15,9 @@ function matCheck(m) {
         throw new Error("matrix must be 4x4");
     }
 }
+/**
+ * convert array of vec4s to Float32Array (works on mat4)
+ */
 function vecArrToPacked(v) {
     return new Float32Array(v.flat());
 }
@@ -61,10 +64,7 @@ function vecSub(v1, v2) {
  * calculate magnitude of a vector
  */
 function vecLength(v) {
-    return Math.sqrt(v[0] * v[0] +
-        v[1] * v[1] +
-        v[2] * v[2] +
-        v[3] * v[3]);
+    return Math.sqrt(vecDot(v, v));
 }
 /**
  * caluclate a normalized vector
@@ -76,10 +76,7 @@ function vecNorm(v) {
  * calculate the dot product of two vectors
  */
 function vecDot(v1, v2) {
-    return ((v1[0] * v2[0]) +
-        (v1[1] * v2[1]) +
-        (v1[2] * v2[2]) +
-        (v1[3] * v2[3]));
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2] + v1[3] * v2[3];
 }
 /**
  * calculate the cross product of two vectors

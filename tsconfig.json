@@ -6,6 +6,7 @@
             "DOM"
         ],
         "strict": true,
+        "alwaysStrict": true,
         "noEmitOnError": true,
         "newLine": "lf"
     },
