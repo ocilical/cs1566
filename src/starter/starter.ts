@@ -1,6 +1,3 @@
-// Always execute in strict mode (less bug)
-'use strict';
-
 // These variables must be global variables.
 // Some callback functions may need to access them.
 let gl: WebGLRenderingContext | null = null;
