@@ -1,17 +1,18 @@
-"use strict";
 // Authors: Edward Angle and Dave Shreiner
 // File:    initShaders.js
 // URL:     cs.unm.edu/~angel
-function initShaders(gl, vertexShaderId, fragmentShaderId) {
+
+function initShaders(gl: WebGLRenderingContext, vertexShaderId: string, fragmentShaderId: string) {
     var vertShdr;
     var fragShdr;
-    var vertElem = document.getElementById(vertexShaderId);
+
+    var vertElem = document.getElementById(vertexShaderId) as HTMLScriptElement;
     if (!vertElem) {
         alert("Unable to load vertex shader " + vertexShaderId);
         return -1;
     }
     else {
-        vertShdr = gl.createShader(gl.VERTEX_SHADER);
+        vertShdr = gl.createShader(gl.VERTEX_SHADER)!;
         gl.shaderSource(vertShdr, vertElem.text);
         gl.compileShader(vertShdr);
         if (!gl.getShaderParameter(vertShdr, gl.COMPILE_STATUS)) {
@@ -21,13 +22,14 @@ function initShaders(gl, vertexShaderId, fragmentShaderId) {
             return -1;
         }
     }
-    var fragElem = document.getElementById(fragmentShaderId);
+
+    var fragElem = document.getElementById(fragmentShaderId) as HTMLScriptElement;
     if (!fragElem) {
         alert("Unable to load vertex shader " + fragmentShaderId);
         return -1;
     }
     else {
-        fragShdr = gl.createShader(gl.FRAGMENT_SHADER);
+        fragShdr = gl.createShader(gl.FRAGMENT_SHADER)!;
         gl.shaderSource(fragShdr, fragElem.text);
         gl.compileShader(fragShdr);
         if (!gl.getShaderParameter(fragShdr, gl.COMPILE_STATUS)) {
@@ -37,15 +39,18 @@ function initShaders(gl, vertexShaderId, fragmentShaderId) {
             return -1;
         }
     }
-    var program = gl.createProgram();
+
+    var program = gl.createProgram()!;
     gl.attachShader(program, vertShdr);
     gl.attachShader(program, fragShdr);
     gl.linkProgram(program);
+
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
         var msg = "Shader program failed to link.  The error log is:"
             + "<pre>" + gl.getProgramInfoLog(program) + "</pre>";
         alert(msg);
         return -1;
     }
+
     return program;
 }

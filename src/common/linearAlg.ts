@@ -27,7 +27,7 @@ function matCheck(m: mat4): void {
 /**
  * convert array of vec4s to Float32Array (works on mat4)
  */
-function vecArrToPacked(v: vec4[]): Float32Array {
+function to1DF32Array(v: vec4[]): Float32Array {
     return new Float32Array(v.flat());
 }
 
@@ -274,4 +274,26 @@ function mat3Det(m: mat3): number {
         m[1][2] * m[2][1] * m[0][0] -
         m[2][2] * m[0][1] * m[1][0]
     );
+}
+
+/**
+ * returns rotation matrix about the z-axis for a given degree
+ */
+function rotateZ(degree: number): mat4 {
+    // A result is a 4 x 4 matrix (column major)
+    let result: mat4 = [
+        [1.0, 0.0, 0.0, 0.0],  // first column
+        [0.0, 1.0, 0.0, 0.0],  // second column
+        [0.0, 0.0, 1.0, 0.0],  // third column
+        [0.0, 0.0, 0.0, 1.0]   // fourth column
+    ];
+
+    var radian = degree * Math.PI / 180.0;
+
+    result[0][0] = Math.cos(radian);
+    result[0][1] = Math.sin(radian);
+    result[1][0] = -Math.sin(radian);
+    result[1][1] = Math.cos(radian);
+
+    return result;
 }
