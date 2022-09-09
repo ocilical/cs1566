@@ -103,7 +103,7 @@ function vecCross(v1: vec4, v2: vec4): vec4 {
         (v1[1] * v2[2]) - (v1[2] * v2[1]),
         (v1[2] * v2[0]) - (v1[0] * v2[2]),
         (v1[0] * v2[1]) - (v1[1] * v2[0]),
-        0.0
+        0.0,
     ];
 }
 
@@ -285,7 +285,7 @@ function rotateZ(degree: number): mat4 {
         [1.0, 0.0, 0.0, 0.0],  // first column
         [0.0, 1.0, 0.0, 0.0],  // second column
         [0.0, 0.0, 1.0, 0.0],  // third column
-        [0.0, 0.0, 0.0, 1.0]   // fourth column
+        [0.0, 0.0, 0.0, 1.0],  // fourth column
     ];
 
     var radian = degree * Math.PI / 180.0;

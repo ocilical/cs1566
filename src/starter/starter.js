@@ -58,7 +58,7 @@ function init() {
         [-0.1, -0.9, 0.5, 1.0],
         [-0.1, -0.9, 0.5, 1.0],
         [-0.9, -0.1, 0.5, 1.0],
-        [-0.9, -0.9, 0.5, 1.0]
+        [-0.9, -0.9, 0.5, 1.0],
     ];
     let colors = [
         // First Triangle (rainbow)
@@ -75,7 +75,7 @@ function init() {
         [1.0, 0.0, 1.0, 1.0],
         [1.0, 0.0, 1.0, 1.0],
         [1.0, 0.0, 1.0, 1.0],
-        [1.0, 0.0, 1.0, 1.0]
+        [1.0, 0.0, 1.0, 1.0],
     ];
     // Load and compile shader programs
     let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -142,10 +142,12 @@ function idle() {
         position_modifier = -0.01;
     else if (triangle_position <= -0.5)
         position_modifier = 0.01;
-    middle_triangle_ctm = [[1.0, 0.0, 0.0, 0.0],
+    middle_triangle_ctm = [
+        [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [triangle_position, 0.0, 0.0, 1.0]];
+        [triangle_position, 0.0, 0.0, 1.0],
+    ];
     // Calculate ctm for the top-right triangle
     triangle_degree += 0.1;
     if (triangle_degree > 360.0)

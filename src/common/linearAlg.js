@@ -86,7 +86,7 @@ function vecCross(v1, v2) {
         (v1[1] * v2[2]) - (v1[2] * v2[1]),
         (v1[2] * v2[0]) - (v1[0] * v2[2]),
         (v1[0] * v2[1]) - (v1[1] * v2[0]),
-        0.0
+        0.0,
     ];
 }
 /**
@@ -250,7 +250,7 @@ function rotateZ(degree) {
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0] // fourth column
+        [0.0, 0.0, 0.0, 1.0], // fourth column
     ];
     var radian = degree * Math.PI / 180.0;
     result[0][0] = Math.cos(radian);
