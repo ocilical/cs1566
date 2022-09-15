@@ -1,4 +1,4 @@
-/// <reference path="cone.ts" />
+
 namespace Lab03 {
     // These variables must be global variables.
     // Some callback functions may need to access them.
