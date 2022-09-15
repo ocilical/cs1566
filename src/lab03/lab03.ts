@@ -1,4 +1,5 @@
-namespace Starter {
+/// <reference path="cone.ts" />
+namespace Lab03 {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl: WebGLRenderingContext | null = null;
@@ -235,4 +236,6 @@ namespace Starter {
         if (isAnimating)
             requestAnimationFrame(idle);
     }
+
+    console.log(Lab03.genColors(3));
 }
