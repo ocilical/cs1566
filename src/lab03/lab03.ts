@@ -236,6 +236,4 @@ namespace Lab03 {
         if (isAnimating)
             requestAnimationFrame(idle);
     }
-
-    console.log(Lab03.genColors(3));
 }
