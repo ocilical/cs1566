@@ -1,53 +1,46 @@
-
-namespace Lab03 {
+"use strict";
+var Lab03;
+(function (Lab03) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
-    let gl: WebGLRenderingContext | null = null;
-    let canvas: HTMLCanvasElement | null = null;
-    let ctm_location: WebGLUniformLocation | null;
-    let identity: mat4 = [
+    let gl = null;
+    let canvas = null;
+    let ctm_location;
+    let identity = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ];
-    const cone_base_ctm: mat4 = matMul(transRotateZ(30), transScale(0.7));
+    const cone_base_ctm = matMul(transRotateZ(30), transScale(0.7));
     let cone_ctm = identity;
     let isAnimating = true;
     let cone_degree = 0.0;
     const coneSegments = 128;
-
-
-    function initGL(canvas: HTMLCanvasElement) {
+    function initGL(canvas) {
         gl = canvas.getContext("webgl");
         if (!gl) {
             alert("WebGL is not available...");
             return -1;
         }
-
         // Set the clear screen color to black (R, G, B, A)
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
         // Enable hidden surface removal
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
-
         return 0;
     }
-
     function init() {
-        if (!gl) return -1;
-
+        if (!gl)
+            return -1;
         // generate cone and colors for it
-        let positions: vec4[] = genCone(coneSegments);
-        let colors: vec4[] = randomColors(coneSegments * 2);
-
+        let positions = Lab03.genCone(coneSegments);
+        let colors = Lab03.randomColors(coneSegments * 2);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
         if (shaderProgram == -1)
             return -1;
         gl.useProgram(shaderProgram);
-
         // Allocate memory in a graphics card
         let buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -56,7 +49,6 @@ namespace Lab03 {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, to1DF32Array(positions));
         // Transfer colors and put it right after positions
         gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * positions.length, to1DF32Array(colors));
-
         // Vertex Position - locate and enable "vPosition"
         let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
         if (vPosition_location == -1) {
@@ -66,7 +58,6 @@ namespace Lab03 {
         gl.enableVertexAttribArray(vPosition_location);
         // vPosition starts at offset 0
         gl.vertexAttribPointer(vPosition_location, 4, gl.FLOAT, false, 0, 0);
-
         // Vertex Color - locate and enable vColor
         let vColor_location = gl.getAttribLocation(shaderProgram, "vColor");
         if (vColor_location == -1) {
@@ -76,99 +67,81 @@ namespace Lab03 {
         gl.enableVertexAttribArray(vColor_location);
         // vColor starts at the end of positions
         gl.vertexAttribPointer(vColor_location, 4, gl.FLOAT, false, 0, 4 * 4 * positions.length);
-
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
         if (ctm_location == -1) {
             alert("Unable to locate ctm");
             return -1;
         }
-
         return 0;
     }
-
     function display() {
         if (!gl) {
             console.log("WebGL not initialized");
             return;
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
         // Set the ctm of the middle triangle
         gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
         // Draw the middle triangle
         gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
     }
-
     function idle() {
-
         // Calculate ctm for the top-right triangle
         cone_degree += 1;
         if (cone_degree > 360.0)
             cone_degree = 0.0;
-
         cone_ctm = matMul(transRotateY(cone_degree), cone_base_ctm);
-
         // Draw
         display();
-
         if (isAnimating == true)
             requestAnimationFrame(idle);
     }
-
     // This function will be called when a mouse button is down inside the canvas.
-    function mouseDownCallback(event: MouseEvent) {
+    function mouseDownCallback(event) {
         console.log("mouseDownCallback(): " +
             "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
+            ", x = " + (event.clientX - canvas.offsetLeft) +
+            ", y = " + (event.clientY - canvas.offsetTop));
     }
-
     // This function will be called when a mouse button is up inside the canvas
-    function mouseUpCallback(event: MouseEvent) {
+    function mouseUpCallback(event) {
         console.log("mouseUpCallback(): " +
             "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
+            ", x = " + (event.clientX - canvas.offsetLeft) +
+            ", y = " + (event.clientY - canvas.offsetTop));
     }
-
     // This function will be called when a mouse pointer moves over the canvas.
-    function mouseMoveCallback(event: MouseEvent) {
+    function mouseMoveCallback(event) {
         console.log("mouseMoveCallback(): " +
             "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
+            ", x = " + (event.clientX - canvas.offsetLeft) +
+            ", y = " + (event.clientY - canvas.offsetTop));
     }
-
     // This function will be called when a keyboard is pressed.
-    function keyDownCallback(event: KeyboardEvent) {
+    function keyDownCallback(event) {
         console.log("keyDownCallback(): " +
             "event.keyCode = " + event.keyCode);
-
         if (event.keyCode == 32) {
             isAnimating = !isAnimating;
             requestAnimationFrame(idle);
         }
     }
-
-    export function main() {
-        canvas = document.getElementById("gl-canvas") as HTMLCanvasElement;
+    function main() {
+        canvas = document.getElementById("gl-canvas");
         if (initGL(canvas) == -1)
             return -1;
         if (init() == -1)
             return -1;
-
         // Register callback functions
         // Comment out those that are not used.
         canvas.onmousedown = mouseDownCallback;
         canvas.onmouseup = mouseUpCallback;
         canvas.onmousemove = mouseMoveCallback;
         document.onkeydown = keyDownCallback;
-
-
         display();
-
         if (isAnimating)
             requestAnimationFrame(idle);
     }
-}
+    Lab03.main = main;
+})(Lab03 || (Lab03 = {}));

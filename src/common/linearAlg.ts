@@ -181,7 +181,7 @@ function matMul(m1: mat4, m2: mat4): mat4 {
 /**
  * calculate transpose of a matrix
  */
-function matTrans(m: mat4): mat4 {
+function matTransp(m: mat4): mat4 {
     return [
         [m[0][0], m[1][0], m[2][0], m[3][0]],
         [m[0][1], m[1][1], m[2][1], m[3][1]],
@@ -196,7 +196,7 @@ function matTrans(m: mat4): mat4 {
 function matInv(m: mat4): mat4 {
     let minor = matMinor(m);
     let cofactor = matCofactor(minor);
-    let transpose = matTrans(cofactor);
+    let transpose = matTransp(cofactor);
     let determinant = matDet(m, minor);
     if (determinant == 0) {
         throw new Error("matrix is not invertable");
@@ -277,9 +277,53 @@ function mat3Det(m: mat3): number {
 }
 
 /**
+ * returns rotation matrix about the x-axis for a given degree
+ */
+function transRotateX(degree: number): mat4 {
+    // A result is a 4 x 4 matrix (column major)
+    let result: mat4 = [
+        [1.0, 0.0, 0.0, 0.0],  // first column
+        [0.0, 1.0, 0.0, 0.0],  // second column
+        [0.0, 0.0, 1.0, 0.0],  // third column
+        [0.0, 0.0, 0.0, 1.0],  // fourth column
+    ];
+
+    var radian = degree * Math.PI / 180.0;
+
+    result[1][1] = Math.cos(radian);
+    result[1][2] = Math.sin(radian);
+    result[2][1] = -Math.sin(radian);
+    result[2][2] = Math.cos(radian);
+
+    return result;
+}
+
+/**
+ * returns rotation matrix about the y-axis for a given degree
+ */
+function transRotateY(degree: number): mat4 {
+    // A result is a 4 x 4 matrix (column major)
+    let result: mat4 = [
+        [1.0, 0.0, 0.0, 0.0],  // first column
+        [0.0, 1.0, 0.0, 0.0],  // second column
+        [0.0, 0.0, 1.0, 0.0],  // third column
+        [0.0, 0.0, 0.0, 1.0],  // fourth column
+    ];
+
+    var radian = degree * Math.PI / 180.0;
+
+    result[0][0] = Math.cos(radian);
+    result[2][0] = Math.sin(radian);
+    result[0][2] = -Math.sin(radian);
+    result[2][2] = Math.cos(radian);
+
+    return result;
+}
+
+/**
  * returns rotation matrix about the z-axis for a given degree
  */
-function rotateZ(degree: number): mat4 {
+function transRotateZ(degree: number): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -296,4 +340,17 @@ function rotateZ(degree: number): mat4 {
     result[1][1] = Math.cos(radian);
 
     return result;
+}
+
+/**
+ * returns a transformation matrix that scales by `factor`
+ * @param factor amount to scale by
+ */
+function transScale(factor: number): mat4 {
+    return [
+        [factor, 0.0, 0.0, 0.0],
+        [0.0, factor, 0.0, 0.0],
+        [0.0, 0.0, factor, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ];
 }
