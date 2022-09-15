@@ -1,14 +1,14 @@
 namespace Lab03 {
     // These variables must be global variables.
     // Some callback functions may need to access them.
-    let gl: WebGLRenderingContext | null = null;
-    let canvas: HTMLCanvasElement | null = null;
+    let gl: WebGLRenderingContext | null;
+    let canvas: HTMLCanvasElement | null;
     let ctm_location: WebGLUniformLocation | null;
     let identity: mat4 = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0]
+        [0.0, 0.0, 0.0, 1.0],
     ];
     const cone_base_ctm: mat4 = matMul(transRotateZ(30), transScale(0.7));
     let cone_ctm = identity;

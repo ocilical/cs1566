@@ -3,14 +3,14 @@ var Lab03;
 (function (Lab03) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
-    let gl = null;
-    let canvas = null;
+    let gl;
+    let canvas;
     let ctm_location;
     let identity = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0]
+        [0.0, 0.0, 0.0, 1.0],
     ];
     const cone_base_ctm = matMul(transRotateZ(30), transScale(0.7));
     let cone_ctm = identity;

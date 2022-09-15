@@ -3,8 +3,8 @@ var Starter;
 (function (Starter) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
-    let gl = null;
-    let canvas = null;
+    let gl;
+    let canvas;
     let ctm_location;
     let identity = [
         [1.0, 0.0, 0.0, 0.0],
@@ -16,13 +16,13 @@ var Starter;
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0]
+        [0.0, 0.0, 0.0, 1.0],
     ];
     let top_right_triangle_ctm = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0]
+        [0.0, 0.0, 0.0, 1.0],
     ];
     let isAnimating = true;
     let triangle_position = 0.0;
