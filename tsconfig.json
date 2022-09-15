@@ -9,8 +9,5 @@
         "alwaysStrict": true,
         "noEmitOnError": true,
         "newLine": "lf"
-    },
-    "include": [
-        "src/**/*"
-    ]
+    }
 }
