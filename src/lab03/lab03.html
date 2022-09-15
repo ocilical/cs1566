@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<!-- Rename this file to something else -->
-
 <html>
-<!-- Vertex Shader -->
-<script id="vertex-shader" type="x-shader/x-vertex">
+  <!-- Vertex Shader -->
+  <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec4 vPosition;
     attribute vec4 vColor;
     varying vec4 color;
@@ -27,8 +25,8 @@
     }
   </script>
 
-<!-- Fragment Shader -->
-<script id="fragment-shader" type="x-shader/x-fragment">
+  <!-- Fragment Shader -->
+  <script id="fragment-shader" type="x-shader/x-fragment">
     precision mediump float;
     
     varying vec4 color;
@@ -39,36 +37,29 @@
     }
   </script>
 
-<!-- Load user-defined libraries and programs -->
-<script type="text/javascript" src="../common/initShaders.js"></script>
-<!-- Add more libraries here -->
-<script type="text/javascript" src="../common/linearAlg.js"></script>
-<script type="text/javascript" src="cone.js"></script>
-<!-- The main program -->
-<script type="text/javascript" src="lab03.js"></script>
+  <!-- Load user-defined libraries and programs -->
+  <script type="text/javascript" src="../common/initShaders.js"></script>
+  <!-- Add more libraries here -->
+  <script type="text/javascript" src="../common/linearAlg.js"></script>
+  <script type="text/javascript" src="cone.js"></script>
+  <!-- The main program -->
+  <script type="text/javascript" src="lab03.js"></script>
 
-<!-- HTML -->
-
-<head>
-  <title>cone</title>
-</head>
-
-<body onload="Lab03.main();">
-  <h1>WebGL Canvas</h1>
-  <p>Your WebGL canvas is shown below:</p>
-  <canvas id="gl-canvas" width="512" height="512">
-    Sorry;
-  </canvas>
-  <!-- Below is a static part of the HTML which can be used for instruction
+  <!-- HTML -->
+  <head>
+    <title>Lab 03</title>
+  </head>
+  
+  <body onload="Lab03.main();">
+    <h1>Lab 03</h1>
+    <p>Your WebGL canvas is shown below:</p>
+    <canvas id="gl-canvas" width="512" height="512">
+      Sorry;
+    </canvas>
+    <!-- Below is a static part of the HTML which can be used for instruction
          and/or explanation -->
-  <p>
-    Use [Spacebar] to start/stop animation.
-  <ul>
-    <li>observe the spinning cone and be forever changed</li>
-  </ul>
-  Additional result from mouse
-  and keyboard inputs can be found in console output (a developer tool).
-  </p>
-</body>
-
+    <p>
+      Use [Spacebar] to tilt your object backward 30, 60, and 90 degrees
+    </p>
+  </body>
 </html>

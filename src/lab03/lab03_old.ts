@@ -1,45 +1,21 @@
-namespace Lab03 {
+namespace Lab03_old {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl: WebGLRenderingContext | null;
     let canvas: HTMLCanvasElement | null;
     let ctm_location: WebGLUniformLocation | null;
-    // made my own transformation matrices to make it easier to see the cone
-    export let ctms: mat4[] = [
-        matMul(transRotateX(0), transScale(0.7)),
-        matMul(transRotateX(-30), transScale(0.7)),
-        matMul(transRotateX(-60), transScale(0.7)),
-        matMul(transRotateX(-90), transScale(0.7)),
+    let identity: mat4 = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
     ];
-    // [
-    //     [
-    //         [1.0, 0.0, 0.0, 0.0],
-    //         [0.0, 1.0, 0.0, 0.0],
-    //         [0.0, 0.0, 1.0, 0.0],
-    //         [0.0, 0.0, 0.0, 1.0]
-    //     ],
-    //     [
-    //         [1.0, 0.0, 0.0, 0.0],
-    //         [0.0, 0.87, -0.50, 0.0],
-    //         [0.0, 0.50, 0.87, 0.0],
-    //         [0.0, 0.0, 0.0, 1.0]
-    //     ],
-    //     [
-    //         [1.0, 0.0, 0.0, 0.0],
-    //         [0.0, 0.50, -0.87, 0.0],
-    //         [0.0, 0.87, 0.50, 0.0],
-    //         [0.0, 0.0, 0.0, 1.0]
-    //     ],
-    //     [
-    //         [1.0, 0.0, 0.0, 0.0],
-    //         [0.0, 0.0, -1.0, 0.0],
-    //         [0.0, 1.0, 0.0, 0.0],
-    //         [0.0, 0.0, 0.0, 1.0]
-    //     ]
-    // ];
-    let ctm_index = 0;
-    let degs = [0, 30, 60, 90];
+    const cone_base_ctm: mat4 = matMul(transRotateZ(30), transScale(0.7));
+    let cone_ctm = identity;
+    let isAnimating = true;
+    let cone_degree = 0.0;
     const coneSegments = 128;
+
 
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
@@ -60,9 +36,10 @@ namespace Lab03 {
 
     function init() {
         if (!gl) return -1;
-        let positions: vec4[] = genCone(coneSegments);
 
-        let colors: vec4[] = randomColors(coneSegments * 2);
+        // generate cone and colors for it
+        let positions: vec4[] = Lab03.genCone(coneSegments);
+        let colors: vec4[] = Lab03.randomColors(coneSegments * 2);
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -116,20 +93,60 @@ namespace Lab03 {
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Set the ctm
-        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(ctms[ctm_index]));
-        // Draw the object
+        // Set the ctm of the middle triangle
+        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
+        // Draw the middle triangle
         gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
     }
 
-    function keyDownCallback(event: KeyboardEvent) {
-        if (event.keyCode == 32) {
-            ctm_index += 1;
-            if (ctm_index == 4)
-                ctm_index = 0;
+    function idle() {
 
-            console.log("Tilting backward " + degs[ctm_index] + " degrees");
-            display();
+        // Calculate ctm for the top-right triangle
+        cone_degree += 1;
+        if (cone_degree > 360.0)
+            cone_degree = 0.0;
+
+        cone_ctm = matMul(transRotateY(cone_degree), cone_base_ctm);
+
+        // Draw
+        display();
+
+        if (isAnimating == true)
+            requestAnimationFrame(idle);
+    }
+
+    // This function will be called when a mouse button is down inside the canvas.
+    function mouseDownCallback(event: MouseEvent) {
+        console.log("mouseDownCallback(): " +
+            "event.which = " + event.which +
+            ", x = " + (event.clientX - canvas!.offsetLeft) +
+            ", y = " + (event.clientY - canvas!.offsetTop));
+    }
+
+    // This function will be called when a mouse button is up inside the canvas
+    function mouseUpCallback(event: MouseEvent) {
+        console.log("mouseUpCallback(): " +
+            "event.which = " + event.which +
+            ", x = " + (event.clientX - canvas!.offsetLeft) +
+            ", y = " + (event.clientY - canvas!.offsetTop));
+    }
+
+    // This function will be called when a mouse pointer moves over the canvas.
+    function mouseMoveCallback(event: MouseEvent) {
+        console.log("mouseMoveCallback(): " +
+            "event.which = " + event.which +
+            ", x = " + (event.clientX - canvas!.offsetLeft) +
+            ", y = " + (event.clientY - canvas!.offsetTop));
+    }
+
+    // This function will be called when a keyboard is pressed.
+    function keyDownCallback(event: KeyboardEvent) {
+        console.log("keyDownCallback(): " +
+            "event.keyCode = " + event.keyCode);
+
+        if (event.keyCode == 32) {
+            isAnimating = !isAnimating;
+            requestAnimationFrame(idle);
         }
     }
 
@@ -140,8 +157,17 @@ namespace Lab03 {
         if (init() == -1)
             return -1;
 
+        // Register callback functions
+        // Comment out those that are not used.
+        canvas.onmousedown = mouseDownCallback;
+        canvas.onmouseup = mouseUpCallback;
+        canvas.onmousemove = mouseMoveCallback;
         document.onkeydown = keyDownCallback;
 
+
         display();
+
+        if (isAnimating)
+            requestAnimationFrame(idle);
     }
 }
