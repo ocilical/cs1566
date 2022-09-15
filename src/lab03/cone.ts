@@ -32,6 +32,7 @@ namespace Lab03 {
         let prevX = 1;
         let prevZ = 0;
 
+        // iterate over each segment (counterclockwise)
         for (let i = 0; i < res.length; i += 6) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
             let angle = (((i / 6) + 1) / segments) * (2 * Math.PI);
