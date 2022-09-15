@@ -1,21 +1,5 @@
 "use strict";
 /**
- * check if a vector is big enough, not sure if i'll need this?
- */
-function vecCheck(v) {
-    if (v.length < 4) {
-        throw new Error("vector must be at least 4 elements");
-    }
-}
-/**
- * check if a matrix is big enough, not sure if i'll need this?
- */
-function matCheck(m) {
-    if (m.length < 4 || m[0].length < 4 || m[1].length < 4 || m[2].length < 4 || m[3].length < 4) {
-        throw new Error("matrix must be 4x4");
-    }
-}
-/**
  * convert array of vec4s to Float32Array (works on mat4)
  */
 function to1DF32Array(v) {
