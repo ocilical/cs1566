@@ -5,7 +5,7 @@ namespace Lab03 {
     let canvas: HTMLCanvasElement | null;
     let ctm_location: WebGLUniformLocation | null;
     // made my own transformation matrices to make it easier to see the cone
-    export let ctms: mat4[] = [
+    const ctms: mat4[] = [
         matMul(transRotateX(0), transScale(0.7)),
         matMul(transRotateX(-30), transScale(0.7)),
         matMul(transRotateX(-60), transScale(0.7)),
