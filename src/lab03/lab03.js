@@ -7,7 +7,7 @@ var Lab03;
     let canvas;
     let ctm_location;
     // made my own transformation matrices to make it easier to see the cone
-    Lab03.ctms = [
+    const ctms = [
         matMul(transRotateX(0), transScale(0.7)),
         matMul(transRotateX(-30), transScale(0.7)),
         matMul(transRotateX(-60), transScale(0.7)),
@@ -106,7 +106,7 @@ var Lab03;
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         // Set the ctm
-        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(Lab03.ctms[ctm_index]));
+        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(ctms[ctm_index]));
         // Draw the object
         gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
     }
