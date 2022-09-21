@@ -1,3 +1,5 @@
+// idk why i still have this file but i don't feel like deleting it
+
 /* to1DF32Array(a2DArray)
  *
  * This function turns an array of 4-element arrays a2DArray into a packed
@@ -30,4 +32,3 @@ function to1DF32Array(a2DArray) {
 
     return new Float32Array(result);
 }
-

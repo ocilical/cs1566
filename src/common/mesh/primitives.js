@@ -1,6 +1,6 @@
 "use strict";
-var Lab03;
-(function (Lab03) {
+var Mesh;
+(function (Mesh) {
     /**
      * generate colors for triangles
      * @param triangles number of triangles
@@ -12,13 +12,13 @@ var Lab03;
             return [color, color, color];
         });
     }
-    Lab03.randomColors = randomColors;
+    Mesh.randomColors = randomColors;
     /**
-     * generate cone at default position
+     * generate cone with height and base diameter 2.0
      * @param segments number of slices to generate the cone in, the cone will be twice this many tris, must be >=3
      * @returns array of verticies
      */
-    function genCone(segments) {
+    function cone(segments) {
         // that's not enough for a cone!
         if (segments < 3) {
             return [];
@@ -51,5 +51,5 @@ var Lab03;
         }
         return res;
     }
-    Lab03.genCone = genCone;
-})(Lab03 || (Lab03 = {}));
+    Mesh.cone = cone;
+})(Mesh || (Mesh = {}));
