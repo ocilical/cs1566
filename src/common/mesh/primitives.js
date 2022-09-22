@@ -14,42 +14,115 @@ var Mesh;
     }
     Mesh.randomColors = randomColors;
     /**
-     * generate cone with height and base diameter 2.0
+     * generate quad, follows counterclockwise winding order
+     * @returns array of vertices
+     */
+    function quad(p1, p2, p3, p4) {
+        return [
+            p1, p2, p4,
+            p2, p3, p4,
+        ];
+    }
+    Mesh.quad = quad;
+    /**
+     * generate 1x1x1 cube, resize it if you want a different cube!
+     * @returns array of vertices
+     */
+    function cube() {
+        return [
+            // top face
+            ...quad([-0.5, 0.5, -0.5, 1.0], [-0.5, 0.5, 0.5, 1.0], [0.5, 0.5, 0.5, 1.0], [0.5, 0.5, -0.5, 1.0]),
+            // bottom face
+            ...quad([0.5, -0.5, -0.5, 1.0], [0.5, -0.5, 0.5, 1.0], [-0.5, -0.5, 0.5, 1.0], [-0.5, -0.5, -0.5, 1.0]),
+            // left face
+            ...quad([-0.5, 0.5, -0.5, 1.0], [-0.5, -0.5, -0.5, 1.0], [-0.5, -0.5, 0.5, 1.0], [-0.5, 0.5, 0.5, 1.0]),
+            // right face
+            ...quad([0.5, 0.5, 0.5, 1.0], [0.5, -0.5, 0.5, 1.0], [0.5, -0.5, -0.5, 1.0], [0.5, 0.5, -0.5, 1.0]),
+            // front face
+            ...quad([0.5, -0.5, 0.5, 1.0], [0.5, 0.5, 0.5, 1.0], [-0.5, 0.5, 0.5, 1.0], [-0.5, -0.5, 0.5, 1.0]),
+            // back face
+            ...quad([0.5, 0.5, -0.5, 1.0], [0.5, -0.5, -0.5, 1.0], [-0.5, -0.5, -0.5, 1.0], [-0.5, 0.5, -0.5, 1.0]),
+        ];
+    }
+    Mesh.cube = cube;
+    /**
+     * generate cone with height and base diameter 1
      * @param segments number of slices to generate the cone in, the cone will be twice this many tris, must be >=3
-     * @returns array of verticies
+     * @returns array of vertices
      */
     function cone(segments) {
         // that's not enough for a cone!
         if (segments < 3) {
             return [];
         }
-        // 3 vertices per triangle, two v
+        // 3 verts per tri, two tris per segment
         let res = Array(segments * 3 * 2);
-        const tip = [0.0, 1.0, 0.0, 1.0];
-        const base = [0.0, -1.0, 0.0, 1.0];
+        const tip = [0.0, 0.5, 0.0, 1.0];
+        const base = [0.0, -0.5, 0.0, 1.0];
         // set up first vertex
-        let prevX = 1;
-        let prevZ = 0;
+        let oldX = 0.5;
+        let oldZ = 0;
         // iterate over each segment (counterclockwise when looking at the bottom)
         for (let i = 0; i < res.length; i += 6) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
             let angle = (((i / 6) + 1) / segments) * (2 * Math.PI);
             // calculate position of next vertex around the cone's base
-            let newX = Math.cos(angle);
-            let newZ = Math.sin(angle);
+            let newX = 0.5 * Math.cos(angle);
+            let newZ = 0.5 * Math.sin(angle);
             // triangle that goes to the tip of the cone
             res[i + 0] = tip;
             res[i + 1] = [newX, base[1], newZ, 1.0];
-            res[i + 2] = [prevX, base[1], prevZ, 1.0];
+            res[i + 2] = [oldX, base[1], oldZ, 1.0];
             // triangle on the base
             res[i + 3] = base;
-            res[i + 4] = [prevX, base[1], prevZ, 1.0];
+            res[i + 4] = [oldX, base[1], oldZ, 1.0];
             res[i + 5] = [newX, base[1], newZ, 1.0];
             // prepare for next iteration
-            prevX = newX;
-            prevZ = newZ;
+            oldX = newX;
+            oldZ = newZ;
         }
         return res;
     }
     Mesh.cone = cone;
+    function cylinder(segments) {
+        // that's not enough for a cylinder!
+        if (segments < 3) {
+            return [];
+        }
+        // 3 verts per tri, 4 tris per segment
+        let res = Array(segments * 3 * 4);
+        // centers of the top and bottom
+        const top = [0.0, 0.5, 0.0, 1.0];
+        const bot = [0.0, -0.5, 0.0, 1.0];
+        // set up first vertex
+        let oldX = 0.5;
+        let oldZ = 0;
+        for (let i = 0; i < res.length; i += 12) {
+            // calculate current angle, i + 1 since the calculated vertex is shared with next segment
+            let angle = (((i / 12) + 1) / segments) * (2 * Math.PI);
+            // calculate position of next vertex around the cone's base
+            let newX = 0.5 * Math.cos(angle);
+            let newZ = 0.5 * Math.sin(angle);
+            // top triangle
+            res[i + 0] = top;
+            res[i + 1] = [newX, top[1], newZ, 1.0];
+            res[i + 2] = [oldX, top[1], oldZ, 1.0];
+            // the quad
+            res[i + 3] = [newX, top[1], newZ, 1.0];
+            res[i + 4] = [newX, bot[1], newZ, 1.0];
+            res[i + 5] = [oldX, bot[1], oldZ, 1.0];
+            res[i + 6] = [oldX, bot[1], oldZ, 1.0];
+            res[i + 7] = [oldX, top[1], oldZ, 1.0];
+            res[i + 8] = [newX, top[1], newZ, 1.0];
+            // bottom triangle
+            res[i + 9] = bot;
+            res[i + 10] = [oldX, bot[1], oldZ, 1.0];
+            res[i + 11] = [newX, bot[1], newZ, 1.0];
+            // prepare for next iteration
+            oldX = newX;
+            oldZ = newZ;
+        }
+        return res;
+    }
+    Mesh.cylinder = cylinder;
 })(Mesh || (Mesh = {}));

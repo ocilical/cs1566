@@ -1,6 +1,6 @@
 "use strict";
-var Lab03_old;
-(function (Lab03_old) {
+var Spinner;
+(function (Spinner) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl;
@@ -12,11 +12,12 @@ var Lab03_old;
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ];
-    const cone_base_ctm = matMul(transRotateZ(30), transScale(0.7));
+    const cone_base_ctm = matMul(transRotateZ(40), transScale(0.7));
     let cone_ctm = identity;
     let isAnimating = true;
     let cone_degree = 0.0;
-    const coneSegments = 128;
+    const segments = 16;
+    let positions;
     function initGL(canvas) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -34,8 +35,8 @@ var Lab03_old;
         if (!gl)
             return -1;
         // generate cone and colors for it
-        let positions = Lab03.genCone(coneSegments);
-        let colors = Lab03.randomColors(coneSegments * 2);
+        positions = Mesh.cylinder(segments);
+        let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
         if (shaderProgram == -1)
@@ -84,7 +85,7 @@ var Lab03_old;
         // Set the ctm of the middle triangle
         gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
         // Draw the middle triangle
-        gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
+        gl.drawArrays(gl.TRIANGLES, 0, positions.length);
     }
     function idle() {
         // Calculate ctm for the top-right triangle
@@ -143,5 +144,5 @@ var Lab03_old;
         if (isAnimating)
             requestAnimationFrame(idle);
     }
-    Lab03_old.main = main;
-})(Lab03_old || (Lab03_old = {}));
+    Spinner.main = main;
+})(Spinner || (Spinner = {}));

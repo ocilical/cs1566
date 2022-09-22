@@ -1,4 +1,4 @@
-namespace Lab03_old {
+namespace Spinner {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl: WebGLRenderingContext | null;
@@ -10,11 +10,12 @@ namespace Lab03_old {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ];
-    const cone_base_ctm: mat4 = matMul(transRotateZ(30), transScale(0.7));
+    const cone_base_ctm: mat4 = matMul(transRotateZ(40), transScale(0.7));
     let cone_ctm = identity;
     let isAnimating = true;
     let cone_degree = 0.0;
-    const coneSegments = 128;
+    const segments = 16;
+    let positions: vec4[];
 
 
     function initGL(canvas: HTMLCanvasElement) {
@@ -38,8 +39,8 @@ namespace Lab03_old {
         if (!gl) return -1;
 
         // generate cone and colors for it
-        let positions: vec4[] = Lab03.genCone(coneSegments);
-        let colors: vec4[] = Lab03.randomColors(coneSegments * 2);
+        positions = Mesh.cylinder(segments);
+        let colors: vec4[] = Mesh.randomColors(positions.length);
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -96,7 +97,7 @@ namespace Lab03_old {
         // Set the ctm of the middle triangle
         gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
         // Draw the middle triangle
-        gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
+        gl.drawArrays(gl.TRIANGLES, 0, positions.length);
     }
 
     function idle() {
