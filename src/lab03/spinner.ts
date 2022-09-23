@@ -10,7 +10,7 @@ namespace Spinner {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ];
-    const cone_base_ctm: mat4 = matMul(transRotateZ(40), transScale(0.7));
+    const cone_base_ctm: mat4 = transRotateZ(40);
     let cone_ctm = identity;
     let isAnimating = true;
     let cone_degree = 0.0;

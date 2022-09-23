@@ -56,27 +56,23 @@ var Mesh;
             return [];
         }
         // 3 verts per tri, two tris per segment
-        let res = Array(segments * 3 * 2);
+        let res = [];
         const tip = [0.0, 0.5, 0.0, 1.0];
         const base = [0.0, -0.5, 0.0, 1.0];
         // set up first vertex
         let oldX = 0.5;
         let oldZ = 0;
         // iterate over each segment (counterclockwise when looking at the bottom)
-        for (let i = 0; i < res.length; i += 6) {
+        for (let i = 0; i < segments; i++) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
-            let angle = (((i / 6) + 1) / segments) * (2 * Math.PI);
+            let angle = ((i + 1) / segments) * (2 * Math.PI);
             // calculate position of next vertex around the cone's base
             let newX = 0.5 * Math.cos(angle);
             let newZ = 0.5 * Math.sin(angle);
             // triangle that goes to the tip of the cone
-            res[i + 0] = tip;
-            res[i + 1] = [newX, base[1], newZ, 1.0];
-            res[i + 2] = [oldX, base[1], oldZ, 1.0];
+            res.push(tip, [newX, base[1], newZ, 1.0], [oldX, base[1], oldZ, 1.0]);
             // triangle on the base
-            res[i + 3] = base;
-            res[i + 4] = [oldX, base[1], oldZ, 1.0];
-            res[i + 5] = [newX, base[1], newZ, 1.0];
+            res.push(base, [oldX, base[1], oldZ, 1.0], [newX, base[1], newZ, 1.0]);
             // prepare for next iteration
             oldX = newX;
             oldZ = newZ;
@@ -90,34 +86,25 @@ var Mesh;
             return [];
         }
         // 3 verts per tri, 4 tris per segment
-        let res = Array(segments * 3 * 4);
+        let res = [];
         // centers of the top and bottom
         const top = [0.0, 0.5, 0.0, 1.0];
         const bot = [0.0, -0.5, 0.0, 1.0];
         // set up first vertex
         let oldX = 0.5;
         let oldZ = 0;
-        for (let i = 0; i < res.length; i += 12) {
+        for (let i = 0; i < segments; i++) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
-            let angle = (((i / 12) + 1) / segments) * (2 * Math.PI);
+            let angle = ((i + 1) / segments) * (2 * Math.PI);
             // calculate position of next vertex around the cone's base
             let newX = 0.5 * Math.cos(angle);
             let newZ = 0.5 * Math.sin(angle);
             // top triangle
-            res[i + 0] = top;
-            res[i + 1] = [newX, top[1], newZ, 1.0];
-            res[i + 2] = [oldX, top[1], oldZ, 1.0];
+            res.push(top, [newX, top[1], newZ, 1.0], [oldX, top[1], oldZ, 1.0]);
             // the quad
-            res[i + 3] = [newX, top[1], newZ, 1.0];
-            res[i + 4] = [newX, bot[1], newZ, 1.0];
-            res[i + 5] = [oldX, bot[1], oldZ, 1.0];
-            res[i + 6] = [oldX, bot[1], oldZ, 1.0];
-            res[i + 7] = [oldX, top[1], oldZ, 1.0];
-            res[i + 8] = [newX, top[1], newZ, 1.0];
+            res.push(...quad([newX, top[1], newZ, 1.0], [newX, bot[1], newZ, 1.0], [oldX, bot[1], oldZ, 1.0], [oldX, top[1], oldZ, 1.0]));
             // bottom triangle
-            res[i + 9] = bot;
-            res[i + 10] = [oldX, bot[1], oldZ, 1.0];
-            res[i + 11] = [newX, bot[1], newZ, 1.0];
+            res.push(bot, [oldX, bot[1], oldZ, 1.0], [newX, bot[1], newZ, 1.0]);
             // prepare for next iteration
             oldX = newX;
             oldZ = newZ;
