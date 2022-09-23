@@ -1,23 +1,27 @@
 "use strict";
-var Spinner;
-(function (Spinner) {
+var Lab03_2;
+(function (Lab03_2) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl;
     let canvas;
     let ctm_location;
-    let identity = [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
+    const ctms = [
+        transRotateX(0),
+        transRotateX(-30),
+        transRotateX(-60),
+        transRotateX(-90),
     ];
-    const cone_base_ctm = matMul(transRotateZ(40), transScale(0.7));
-    let cone_ctm = identity;
-    let isAnimating = true;
-    let cone_degree = 0.0;
+    let ctm_index = 0;
+    let degs = [0, 30, 60, 90];
     const segments = 128;
     let positions;
+    // keep track of stuff for switching model
+    let cubeVerts;
+    let coneVerts;
+    let cylinderVerts;
+    let offset;
+    let currNumVerts;
     function initGL(canvas) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -34,8 +38,18 @@ var Spinner;
     function init() {
         if (!gl)
             return -1;
-        // generate cone and colors for it
-        positions = Mesh.cylinder(segments);
+        positions = [];
+        let cube = Mesh.cube();
+        cubeVerts = cube.length;
+        positions.push(...cube);
+        let cone = Mesh.cone(segments);
+        coneVerts = cone.length;
+        positions.push(...cone);
+        let cylinder = Mesh.cylinder(segments);
+        cylinderVerts = cylinder.length;
+        positions.push(...cylinder);
+        offset = 0;
+        currNumVerts = cubeVerts;
         let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -82,50 +96,36 @@ var Spinner;
             return;
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        // Set the ctm of the middle triangle
-        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
-        // Draw the middle triangle
-        gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+        // Set the ctm
+        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(ctms[ctm_index]));
+        // Draw the object
+        gl.drawArrays(gl.TRIANGLES, offset, currNumVerts);
     }
-    function idle() {
-        // Calculate ctm for the top-right triangle
-        cone_degree += 1;
-        if (cone_degree > 360.0)
-            cone_degree = 0.0;
-        cone_ctm = matMul(transRotateY(cone_degree), cone_base_ctm);
-        // Draw
-        display();
-        if (isAnimating == true)
-            requestAnimationFrame(idle);
-    }
-    // This function will be called when a mouse button is down inside the canvas.
-    function mouseDownCallback(event) {
-        console.log("mouseDownCallback(): " +
-            "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas.offsetLeft) +
-            ", y = " + (event.clientY - canvas.offsetTop));
-    }
-    // This function will be called when a mouse button is up inside the canvas
-    function mouseUpCallback(event) {
-        console.log("mouseUpCallback(): " +
-            "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas.offsetLeft) +
-            ", y = " + (event.clientY - canvas.offsetTop));
-    }
-    // This function will be called when a mouse pointer moves over the canvas.
-    function mouseMoveCallback(event) {
-        console.log("mouseMoveCallback(): " +
-            "event.which = " + event.which +
-            ", x = " + (event.clientX - canvas.offsetLeft) +
-            ", y = " + (event.clientY - canvas.offsetTop));
-    }
-    // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {
-        console.log("keyDownCallback(): " +
-            "event.keyCode = " + event.keyCode);
         if (event.keyCode == 32) {
-            isAnimating = !isAnimating;
-            requestAnimationFrame(idle);
+            ctm_index += 1;
+            if (ctm_index == 4)
+                ctm_index = 0;
+            console.log("Tilting backward " + degs[ctm_index] + " degrees");
+            display();
+        }
+        else if (event.keyCode == 67) {
+            offset = 0;
+            currNumVerts = cubeVerts;
+            console.log("Displaying cube");
+            display();
+        }
+        else if (event.keyCode == 79) {
+            offset = cubeVerts;
+            currNumVerts = coneVerts;
+            console.log("Displaying cone");
+            display();
+        }
+        else if (event.keyCode == 76) {
+            offset = cubeVerts + coneVerts;
+            currNumVerts = cylinderVerts;
+            console.log("Displaying cylinder");
+            display();
         }
     }
     function main() {
@@ -134,15 +134,8 @@ var Spinner;
             return -1;
         if (init() == -1)
             return -1;
-        // Register callback functions
-        // Comment out those that are not used.
-        canvas.onmousedown = mouseDownCallback;
-        canvas.onmouseup = mouseUpCallback;
-        canvas.onmousemove = mouseMoveCallback;
         document.onkeydown = keyDownCallback;
         display();
-        if (isAnimating)
-            requestAnimationFrame(idle);
     }
-    Spinner.main = main;
-})(Spinner || (Spinner = {}));
+    Lab03_2.main = main;
+})(Lab03_2 || (Lab03_2 = {}));
