@@ -101,7 +101,7 @@ namespace Lab03 {
 
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
-        if (ctm_location == -1) {
+        if (ctm_location == null) {
             alert("Unable to locate ctm");
             return -1;
         }
