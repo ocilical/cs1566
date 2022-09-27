@@ -236,7 +236,7 @@ function transRotateX(degree) {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0], // fourth column
     ];
-    var radian = degree * Math.PI / 180.0;
+    let radian = degree * Math.PI / 180.0;
     result[1][1] = Math.cos(radian);
     result[1][2] = Math.sin(radian);
     result[2][1] = -Math.sin(radian);
@@ -254,7 +254,7 @@ function transRotateY(degree) {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0], // fourth column
     ];
-    var radian = degree * Math.PI / 180.0;
+    let radian = degree * Math.PI / 180.0;
     result[0][0] = Math.cos(radian);
     result[2][0] = Math.sin(radian);
     result[0][2] = -Math.sin(radian);
@@ -272,7 +272,7 @@ function transRotateZ(degree) {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0], // fourth column
     ];
-    var radian = degree * Math.PI / 180.0;
+    let radian = degree * Math.PI / 180.0;
     result[0][0] = Math.cos(radian);
     result[0][1] = Math.sin(radian);
     result[1][0] = -Math.sin(radian);
