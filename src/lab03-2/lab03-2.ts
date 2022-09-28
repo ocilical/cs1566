@@ -5,10 +5,10 @@ namespace Lab03_2 {
     let canvas: HTMLCanvasElement | null;
     let ctm_location: WebGLUniformLocation | null;
     const ctms: mat4[] = [
-        transRotateX(0),
-        transRotateX(-30),
-        transRotateX(-60),
-        transRotateX(-90),
+        rotateX(0),
+        rotateX(-30),
+        rotateX(-60),
+        rotateX(-90),
     ];
 
     let ctm_index = 0;

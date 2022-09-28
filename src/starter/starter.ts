@@ -171,7 +171,7 @@ namespace Starter {
         if (triangle_degree > 360.0)
             triangle_degree = 0.0;
 
-        top_right_triangle_ctm = transRotateZ(triangle_degree);
+        top_right_triangle_ctm = rotateZ(triangle_degree);
 
         // Draw
         display();

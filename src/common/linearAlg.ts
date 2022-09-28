@@ -258,10 +258,31 @@ function mat3Det(m: mat3): number {
     );
 }
 
+function translate(x: number, y: number, z: number): mat4 {
+    return [
+        [1.0, 0.0, 0.0, x],
+        [0.0, 1.0, 0.0, y],
+        [0.0, 0.0, 1.0, z],
+        [0.0, 0.0, 0.0, 1.0],
+    ];
+}
+
+/**
+ * returns a transformation matrix that scales by x, y, and z along respective axes
+ */
+function scale(x: number, y: number, z: number): mat4 {
+    return [
+        [x, 0.0, 0.0, 0.0],
+        [0.0, y, 0.0, 0.0],
+        [0.0, 0.0, z, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ];
+}
+
 /**
  * returns rotation matrix about the x-axis for a given degree
  */
-function transRotateX(degree: number): mat4 {
+function rotateX(degree: number): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -283,7 +304,7 @@ function transRotateX(degree: number): mat4 {
 /**
  * returns rotation matrix about the y-axis for a given degree
  */
-function transRotateY(degree: number): mat4 {
+function rotateY(degree: number): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -305,7 +326,7 @@ function transRotateY(degree: number): mat4 {
 /**
  * returns rotation matrix about the z-axis for a given degree
  */
-function transRotateZ(degree: number): mat4 {
+function rotateZ(degree: number): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -322,17 +343,4 @@ function transRotateZ(degree: number): mat4 {
     result[1][1] = Math.cos(radian);
 
     return result;
-}
-
-/**
- * returns a transformation matrix that scales by `factor`
- * @param factor amount to scale by
- */
-function transScale(factor: number): mat4 {
-    return [
-        [factor, 0.0, 0.0, 0.0],
-        [0.0, factor, 0.0, 0.0],
-        [0.0, 0.0, factor, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ];
 }
