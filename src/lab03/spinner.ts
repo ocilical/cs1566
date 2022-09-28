@@ -147,7 +147,7 @@ namespace Spinner {
 
         if (event.keyCode == 32) {
             isAnimating = !isAnimating;
-            requestAnimationFrame(idle);
+            if (isAnimating) requestAnimationFrame(idle);
         }
     }
 

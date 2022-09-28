@@ -14,6 +14,7 @@ var Lab04;
     ];
     let ctm = identity;
     let isAnimating = true;
+    // track number of times idle has been called, used to drive animation
     let animTime = 0;
     // for rotation
     let prevRot = [0, 0, 0];
@@ -98,6 +99,7 @@ var Lab04;
             lerp(prevRot[1], targetRot[1], (animTime - rotStart) / rotTime),
             lerp(prevRot[2], targetRot[2], (animTime - rotStart) / rotTime),
         ];
+        // pick new rotation target if the previous target has been reached
         if (currRot[0] == targetRot[0] && currRot[2] == targetRot[2] && currRot[2] == targetRot[2]) {
             rotStart = animTime;
             prevRot = targetRot;
@@ -140,7 +142,8 @@ var Lab04;
             "event.keyCode = " + event.keyCode);
         if (event.keyCode == 32) {
             isAnimating = !isAnimating;
-            requestAnimationFrame(idle);
+            if (isAnimating)
+                requestAnimationFrame(idle);
         }
     }
     function main() {

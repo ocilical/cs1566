@@ -186,7 +186,8 @@ var Starter;
             "event.keyCode = " + event.keyCode);
         if (event.keyCode == 32) {
             isAnimating = !isAnimating;
-            requestAnimationFrame(idle);
+            if (isAnimating)
+                requestAnimationFrame(idle);
         }
     }
     function main() {

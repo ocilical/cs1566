@@ -180,7 +180,7 @@ namespace Lab04 {
 
         if (event.keyCode == 32) {
             isAnimating = !isAnimating;
-            requestAnimationFrame(idle);
+            if (isAnimating) requestAnimationFrame(idle);
         }
     }
 
