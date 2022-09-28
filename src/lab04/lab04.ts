@@ -13,6 +13,7 @@ namespace Lab04 {
     let ctm: mat4 = identity;
     let isAnimating = true;
 
+    // track number of times idle has been called, used to drive animation
     let animTime = 0;
 
     // for rotation
@@ -44,7 +45,7 @@ namespace Lab04 {
 
     function init() {
         if (!gl) return -1;
-        positions = Mesh.cube();// Mesh.cylinder(numSegments);
+        positions = Mesh.cube(); // Mesh.cylinder(numSegments);
 
         let colors: vec4[] = Mesh.randomColors(positions.length);
 
@@ -126,6 +127,7 @@ namespace Lab04 {
             lerp(prevRot[2], targetRot[2], (animTime - rotStart) / rotTime),
         ];
 
+        // pick new rotation target if the previous target has been reached
         if (currRot[0] == targetRot[0] && currRot[2] == targetRot[2] && currRot[2] == targetRot[2]) {
             rotStart = animTime;
             prevRot = targetRot;
