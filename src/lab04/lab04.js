@@ -1,6 +1,6 @@
 "use strict";
-var Spinner;
-(function (Spinner) {
+var Lab04;
+(function (Lab04) {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl;
@@ -10,14 +10,18 @@ var Spinner;
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 0.0, 1.0]
     ];
-    const cone_base_ctm = rotateZ(40);
-    let cone_ctm = identity;
+    let ctm = identity;
     let isAnimating = true;
-    let cone_degree = 0.0;
-    const segments = 128;
+    let animTime = 0;
+    // for rotation
+    let prevRot = [0, 0, 0];
+    let targetRot = prevRot;
+    let rotStart = 0;
+    const rotTime = 120;
     let positions;
+    const numSegments = 128;
     function initGL(canvas) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -34,8 +38,7 @@ var Spinner;
     function init() {
         if (!gl)
             return -1;
-        // generate cone and colors for it
-        positions = Mesh.cylinder(segments);
+        positions = Mesh.cube(); // Mesh.cylinder(numSegments);
         let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -83,16 +86,28 @@ var Spinner;
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         // Set the ctm of the middle triangle
-        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
+        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(ctm));
         // Draw the middle triangle
         gl.drawArrays(gl.TRIANGLES, 0, positions.length);
     }
     function idle() {
-        // Calculate ctm for the top-right triangle
-        cone_degree += 1;
-        if (cone_degree > 360.0)
-            cone_degree = 0.0;
-        cone_ctm = matMul(rotateY(cone_degree), cone_base_ctm);
+        let posMat = translate(0.5 * Math.cos((animTime / 20)), 0.25 * Math.sin(2 * (animTime / 20)), 0);
+        let scaleMat = scale(0.25 * Math.sin((animTime / 10) * 0.4) + 0.5, 0.25 * Math.cos((animTime / 10) * 1.1 + 3) + 0.5, 0.25 * Math.cos((animTime / 10) * 1.6 + 6) + 0.5);
+        let currRot = [
+            lerp(prevRot[0], targetRot[0], (animTime - rotStart) / rotTime),
+            lerp(prevRot[1], targetRot[1], (animTime - rotStart) / rotTime),
+            lerp(prevRot[2], targetRot[2], (animTime - rotStart) / rotTime),
+        ];
+        if (currRot[0] == targetRot[0] && currRot[2] == targetRot[2] && currRot[2] == targetRot[2]) {
+            rotStart = animTime;
+            prevRot = targetRot;
+            targetRot = [360 * Math.random(), 360 * Math.random(), 360 * Math.random()];
+        }
+        let rotMat = matMul(matMul(rotateY(currRot[1]), rotateX(currRot[0])), rotateZ(currRot[2]));
+        //ctm = matMul(rotMat, matMul(scaleMat, posMat));
+        ctm = matMul(posMat, matMul(rotMat, scaleMat));
+        // update time
+        animTime += 1;
         // Draw
         display();
         if (isAnimating == true)
@@ -144,5 +159,5 @@ var Spinner;
         if (isAnimating)
             requestAnimationFrame(idle);
     }
-    Spinner.main = main;
-})(Spinner || (Spinner = {}));
+    Lab04.main = main;
+})(Lab04 || (Lab04 = {}));

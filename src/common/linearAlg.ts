@@ -21,6 +21,13 @@ function vecPrint(v: vec4): void {
 }
 
 /**
+ * check vectors for equality
+ */
+function vecEquals(a: vec4, b: vec4): boolean {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+}
+
+/**
  * multiply a vector by a scalar, s * v
  */
 function vecScale(s: number, v: vec4): vec4 {
@@ -258,12 +265,34 @@ function mat3Det(m: mat3): number {
     );
 }
 
+/**
+ * linearly interpolate between a and b, point in interpolation controlled by t
+ */
+function lerp(a: number, b: number, t: number): number {
+    return (1 - t) * a + t * b;
+}
+
+/**
+ * linearly interpolate between two vec4s, a and b, point in interpolation controlled by t
+ */
+function vecLerp(a: vec4, b: vec4, t: number): vec4 {
+    return [
+        lerp(a[0], b[0], t),
+        lerp(a[1], b[1], t),
+        lerp(a[2], b[2], t),
+        lerp(a[3], b[3], t),
+    ];
+}
+
+/**
+ * returns a transformation that translates by x, y, and z along respective axes
+ */
 function translate(x: number, y: number, z: number): mat4 {
     return [
-        [1.0, 0.0, 0.0, x],
-        [0.0, 1.0, 0.0, y],
-        [0.0, 0.0, 1.0, z],
-        [0.0, 0.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [x, y, z, 1.0],
     ];
 }
 

@@ -12,6 +12,12 @@ function vecPrint(v) {
     console.log(`[${v[0].toFixed(4)}, ${v[1].toFixed(4)}, ${v[2].toFixed(4)}, ${v[3].toFixed(4)}]`);
 }
 /**
+ * check vectors for equality
+ */
+function vecEquals(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+}
+/**
  * multiply a vector by a scalar, s * v
  */
 function vecScale(s, v) {
@@ -226,9 +232,48 @@ function mat3Det(m) {
         m[2][2] * m[0][1] * m[1][0]);
 }
 /**
+ * linearly interpolate between a and b, point in interpolation controlled by t
+ */
+function lerp(a, b, t) {
+    return (1 - t) * a + t * b;
+}
+/**
+ * linearly interpolate between two vec4s, a and b, point in interpolation controlled by t
+ */
+function vecLerp(a, b, t) {
+    return [
+        lerp(a[0], b[0], t),
+        lerp(a[1], b[1], t),
+        lerp(a[2], b[2], t),
+        lerp(a[3], b[3], t),
+    ];
+}
+/**
+ * returns a transformation that translates by x, y, and z along respective axes
+ */
+function translate(x, y, z) {
+    return [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [x, y, z, 1.0],
+    ];
+}
+/**
+ * returns a transformation matrix that scales by x, y, and z along respective axes
+ */
+function scale(x, y, z) {
+    return [
+        [x, 0.0, 0.0, 0.0],
+        [0.0, y, 0.0, 0.0],
+        [0.0, 0.0, z, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ];
+}
+/**
  * returns rotation matrix about the x-axis for a given degree
  */
-function transRotateX(degree) {
+function rotateX(degree) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -246,7 +291,7 @@ function transRotateX(degree) {
 /**
  * returns rotation matrix about the y-axis for a given degree
  */
-function transRotateY(degree) {
+function rotateY(degree) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -264,7 +309,7 @@ function transRotateY(degree) {
 /**
  * returns rotation matrix about the z-axis for a given degree
  */
-function transRotateZ(degree) {
+function rotateZ(degree) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -278,16 +323,4 @@ function transRotateZ(degree) {
     result[1][0] = -Math.sin(radian);
     result[1][1] = Math.cos(radian);
     return result;
-}
-/**
- * returns a transformation matrix that scales by `factor`
- * @param factor amount to scale by
- */
-function transScale(factor) {
-    return [
-        [factor, 0.0, 0.0, 0.0],
-        [0.0, factor, 0.0, 0.0],
-        [0.0, 0.0, factor, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ];
 }

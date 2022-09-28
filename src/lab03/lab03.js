@@ -8,10 +8,10 @@ var Lab03;
     let ctm_location;
     // made my own transformation matrices to make it easier to see the cone
     const ctms = [
-        matMul(transRotateX(0), transScale(0.7)),
-        matMul(transRotateX(-30), transScale(0.7)),
-        matMul(transRotateX(-60), transScale(0.7)),
-        matMul(transRotateX(-90), transScale(0.7)),
+        matMul(rotateX(0), scale(0.7, 0.7, 0.7)),
+        matMul(rotateX(-30), scale(0.7, 0.7, 0.7)),
+        matMul(rotateX(-60), scale(0.7, 0.7, 0.7)),
+        matMul(rotateX(-90), scale(0.7, 0.7, 0.7)),
     ];
     // [
     //     [

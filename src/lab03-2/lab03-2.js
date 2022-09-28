@@ -7,10 +7,10 @@ var Lab03_2;
     let canvas;
     let ctm_location;
     const ctms = [
-        transRotateX(0),
-        transRotateX(-30),
-        transRotateX(-60),
-        transRotateX(-90),
+        rotateX(0),
+        rotateX(-30),
+        rotateX(-60),
+        rotateX(-90),
     ];
     let ctm_index = 0;
     let degs = [0, 30, 60, 90];
