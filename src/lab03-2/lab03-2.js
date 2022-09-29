@@ -53,7 +53,7 @@ var Lab03_2;
         let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
-        if (shaderProgram == -1)
+        if (shaderProgram === -1)
             return -1;
         gl.useProgram(shaderProgram);
         // Allocate memory in a graphics card
@@ -66,7 +66,7 @@ var Lab03_2;
         gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * positions.length, to1DF32Array(colors));
         // Vertex Position - locate and enable "vPosition"
         let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
-        if (vPosition_location == -1) {
+        if (vPosition_location === -1) {
             alert("Unable to locate vPosition");
             return -1;
         }
@@ -75,7 +75,7 @@ var Lab03_2;
         gl.vertexAttribPointer(vPosition_location, 4, gl.FLOAT, false, 0, 0);
         // Vertex Color - locate and enable vColor
         let vColor_location = gl.getAttribLocation(shaderProgram, "vColor");
-        if (vColor_location == -1) {
+        if (vColor_location === -1) {
             alert("Unable to locate vColor");
             return -1;
         }
@@ -84,7 +84,7 @@ var Lab03_2;
         gl.vertexAttribPointer(vColor_location, 4, gl.FLOAT, false, 0, 4 * 4 * positions.length);
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
-        if (ctm_location == null) {
+        if (ctm_location === null) {
             alert("Unable to locate ctm");
             return -1;
         }
@@ -102,26 +102,26 @@ var Lab03_2;
         gl.drawArrays(gl.TRIANGLES, offset, currNumVerts);
     }
     function keyDownCallback(event) {
-        if (event.keyCode == 32) {
+        if (event.keyCode === 32) {
             ctm_index += 1;
-            if (ctm_index == 4)
+            if (ctm_index === 4)
                 ctm_index = 0;
             console.log("Tilting backward " + degs[ctm_index] + " degrees");
             display();
         }
-        else if (event.keyCode == 67) {
+        else if (event.keyCode === 67) {
             offset = 0;
             currNumVerts = cubeVerts;
             console.log("Displaying cube");
             display();
         }
-        else if (event.keyCode == 79) {
+        else if (event.keyCode === 79) {
             offset = cubeVerts;
             currNumVerts = coneVerts;
             console.log("Displaying cone");
             display();
         }
-        else if (event.keyCode == 76) {
+        else if (event.keyCode === 76) {
             offset = cubeVerts + coneVerts;
             currNumVerts = cylinderVerts;
             console.log("Displaying cylinder");
@@ -130,9 +130,9 @@ var Lab03_2;
     }
     function main() {
         canvas = document.getElementById("gl-canvas");
-        if (initGL(canvas) == -1)
+        if (initGL(canvas) === -1)
             return -1;
-        if (init() == -1)
+        if (init() === -1)
             return -1;
         document.onkeydown = keyDownCallback;
         display();

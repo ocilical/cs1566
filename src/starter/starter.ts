@@ -85,7 +85,7 @@ namespace Starter {
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
-        if (shaderProgram == -1)
+        if (shaderProgram === -1)
             return -1;
         gl.useProgram(shaderProgram);
 
@@ -100,7 +100,7 @@ namespace Starter {
 
         // Vertex Position - locate and enable "vPosition"
         let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
-        if (vPosition_location == -1) {
+        if (vPosition_location === -1) {
             alert("Unable to locate vPosition");
             return -1;
         }
@@ -110,7 +110,7 @@ namespace Starter {
 
         // Vertex Color - locate and enable vColor
         let vColor_location = gl.getAttribLocation(shaderProgram, "vColor");
-        if (vColor_location == -1) {
+        if (vColor_location === -1) {
             alert("Unable to locate vColor");
             return -1;
         }
@@ -120,7 +120,7 @@ namespace Starter {
 
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
-        if (ctm_location == null) {
+        if (ctm_location === null) {
             alert("Unable to locate ctm");
             return -1;
         }
@@ -176,7 +176,7 @@ namespace Starter {
         // Draw
         display();
 
-        if (isAnimating == true)
+        if (isAnimating === true)
             requestAnimationFrame(idle);
     }
 
@@ -209,7 +209,7 @@ namespace Starter {
         console.log("keyDownCallback(): " +
             "event.keyCode = " + event.keyCode);
 
-        if (event.keyCode == 32) {
+        if (event.keyCode === 32) {
             isAnimating = !isAnimating;
             if (isAnimating) requestAnimationFrame(idle);
         }
@@ -217,9 +217,9 @@ namespace Starter {
 
     export function main() {
         canvas = document.getElementById("gl-canvas") as HTMLCanvasElement;
-        if (initGL(canvas) == -1)
+        if (initGL(canvas) === -1)
             return -1;
-        if (init() == -1)
+        if (init() === -1)
             return -1;
 
         // Register callback functions

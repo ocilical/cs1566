@@ -8,7 +8,7 @@ function initGL(canvas)
 {
     // Get the WegGL Rendering Context
     gl = canvas.getContext("webgl");
-    if(gl == null)
+    if(gl === null)
     {
 	alert("WebGL is not available...");
 	return -1;
@@ -36,7 +36,7 @@ function init()
 
     // Load and compile the shader program (need initShaders.js)
     var shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
-    if(shaderProgram == -1)
+    if(shaderProgram === -1)
 	return -1;
     gl.useProgram(shaderProgram)
 
@@ -51,7 +51,7 @@ function init()
 
     // Locate the name vPosition in a shader program and enable it
     var vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
-    if (vPosition_location == -1)
+    if (vPosition_location === -1)
     { 
         alert("Unable to locate vPosition");
         return -1;
@@ -82,9 +82,9 @@ function main()
 {
     // Get the canvas element (from html document)
     var canvas = document.getElementById("gl-canvas");
-    if(initGL(canvas) == -1)
+    if(initGL(canvas) === -1)
 	return -1;
-    if(init() == -1)
+    if(init() === -1)
 	return -1;
 
     // Display "Hello from WebGL..." on the console screen

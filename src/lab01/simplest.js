@@ -5,7 +5,7 @@ var gl = null;
 function initGL(canvas)
 {
     gl = canvas.getContext("webgl");
-    if(gl == null)
+    if(gl === null)
     {
 	alert("WebGL is not available...");
 	return -1;
@@ -26,7 +26,7 @@ function init()
     ];
 
     var shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
-    if(shaderProgram == -1)
+    if(shaderProgram === -1)
 	return -1;
     gl.useProgram(shaderProgram)
 
@@ -36,7 +36,7 @@ function init()
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, to1DF32Array(positions));
 
     var vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
-    if (vPosition_location == -1)
+    if (vPosition_location === -1)
     { 
         alert("Unable to locate vPosition");
         return -1;
@@ -57,9 +57,9 @@ function display()
 function main()
 {
     var canvas = document.getElementById("gl-canvas");
-    if(initGL(canvas) == -1)
+    if(initGL(canvas) === -1)
 	return -1;
-    if(init() == -1)
+    if(init() === -1)
 	return -1;
 
     console.log("Hello from WebGL...");

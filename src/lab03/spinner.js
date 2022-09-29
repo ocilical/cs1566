@@ -39,7 +39,7 @@ var Spinner;
         let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
-        if (shaderProgram == -1)
+        if (shaderProgram === -1)
             return -1;
         gl.useProgram(shaderProgram);
         // Allocate memory in a graphics card
@@ -52,7 +52,7 @@ var Spinner;
         gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * positions.length, to1DF32Array(colors));
         // Vertex Position - locate and enable "vPosition"
         let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
-        if (vPosition_location == -1) {
+        if (vPosition_location === -1) {
             alert("Unable to locate vPosition");
             return -1;
         }
@@ -61,7 +61,7 @@ var Spinner;
         gl.vertexAttribPointer(vPosition_location, 4, gl.FLOAT, false, 0, 0);
         // Vertex Color - locate and enable vColor
         let vColor_location = gl.getAttribLocation(shaderProgram, "vColor");
-        if (vColor_location == -1) {
+        if (vColor_location === -1) {
             alert("Unable to locate vColor");
             return -1;
         }
@@ -70,7 +70,7 @@ var Spinner;
         gl.vertexAttribPointer(vColor_location, 4, gl.FLOAT, false, 0, 4 * 4 * positions.length);
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
-        if (ctm_location == null) {
+        if (ctm_location === null) {
             alert("Unable to locate ctm");
             return -1;
         }
@@ -95,7 +95,7 @@ var Spinner;
         cone_ctm = matMul(rotateY(cone_degree), cone_base_ctm);
         // Draw
         display();
-        if (isAnimating == true)
+        if (isAnimating === true)
             requestAnimationFrame(idle);
     }
     // This function will be called when a mouse button is down inside the canvas.
@@ -123,7 +123,7 @@ var Spinner;
     function keyDownCallback(event) {
         console.log("keyDownCallback(): " +
             "event.keyCode = " + event.keyCode);
-        if (event.keyCode == 32) {
+        if (event.keyCode === 32) {
             isAnimating = !isAnimating;
             if (isAnimating)
                 requestAnimationFrame(idle);
@@ -131,9 +131,9 @@ var Spinner;
     }
     function main() {
         canvas = document.getElementById("gl-canvas");
-        if (initGL(canvas) == -1)
+        if (initGL(canvas) === -1)
             return -1;
-        if (init() == -1)
+        if (init() === -1)
             return -1;
         // Register callback functions
         // Comment out those that are not used.

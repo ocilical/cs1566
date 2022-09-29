@@ -161,7 +161,7 @@ function matInv(m) {
     let cofactor = matCofactor(minor);
     let transpose = matTransp(cofactor);
     let determinant = matDet(m, minor);
-    if (determinant == 0) {
+    if (determinant === 0) {
         throw new Error("matrix is not invertable");
     }
     return matScale(1 / determinant, transpose);
