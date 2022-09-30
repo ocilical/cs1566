@@ -165,12 +165,12 @@ namespace Mesh {
      * generate a torus with major diameter 1
      * @param segments number of vertical segments
      * @param bands number of horizontal bands
-     * @param minorDiam [optional] minor diameter of torus
+     * @param minorDiam [optional] minor diameter of torus, since you can't change it with a linear transformation
      * @returns 
      */
     export function torus(segments: number, bands: number, minorDiam?: number): vec4[] {
         // default minor diameter if not provided
-        minorDiam = minorDiam ? minorDiam : 0.2;
+        minorDiam = minorDiam ?? 0.2;
 
         return [];
     }

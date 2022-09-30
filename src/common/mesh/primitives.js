@@ -126,12 +126,12 @@ var Mesh;
      * generate a torus with major diameter 1
      * @param segments number of vertical segments
      * @param bands number of horizontal bands
-     * @param minorDiam [optional] minor diameter of torus
+     * @param minorDiam [optional] minor diameter of torus, since you can't change it with a linear transformation
      * @returns
      */
     function torus(segments, bands, minorDiam) {
         // default minor diameter if not provided
-        minorDiam = minorDiam ? minorDiam : 0.2;
+        minorDiam = minorDiam !== null && minorDiam !== void 0 ? minorDiam : 0.2;
         return [];
     }
     Mesh.torus = torus;
