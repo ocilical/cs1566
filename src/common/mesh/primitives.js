@@ -112,4 +112,27 @@ var Mesh;
         return res;
     }
     Mesh.cylinder = cylinder;
+    /**
+     * generate a sphere of diameter 1
+     * @param segments number of vertical segments
+     * @param bands number of horizontal bands
+     * @returns array of vertices
+     */
+    function sphere(segments, bands) {
+        return [];
+    }
+    Mesh.sphere = sphere;
+    /**
+     * generate a torus with major diameter 1
+     * @param segments number of vertical segments
+     * @param bands number of horizontal bands
+     * @param minorDiam [optional] minor diameter of torus
+     * @returns
+     */
+    function torus(segments, bands, minorDiam) {
+        // default minor diameter if not provided
+        minorDiam = minorDiam ? minorDiam : 0.2;
+        return [];
+    }
+    Mesh.torus = torus;
 })(Mesh || (Mesh = {}));
