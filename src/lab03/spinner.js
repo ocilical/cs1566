@@ -35,7 +35,7 @@ var Spinner;
         if (!gl)
             return -1;
         // generate cone and colors for it
-        positions = Mesh.cylinder(segments);
+        positions = Mesh.torus(64, 16); //Mesh.cylinder(segments);
         let colors = Mesh.randomColors(positions.length);
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
