@@ -147,7 +147,7 @@ var Mesh;
         }
         // bottom triangle
         segment.push(bot, old2, old1);
-        // start building full sphere
+        // build full sphere
         let res = [...segment];
         for (let i = 1; i < segments; i++) {
             let rot = rotateY(segmentAngle * i);
@@ -170,7 +170,27 @@ var Mesh;
         }
         // default minor diameter if not provided
         minorDiam = minorDiam !== null && minorDiam !== void 0 ? minorDiam : 0.2;
-        return [];
+        // calculate angles
+        const segmentAngle = (1 / segments) * 360;
+        const bandAngle = (1 / bands) * 360;
+        // build first segment
+        let segment = [];
+        const segmentRot = rotateY(segmentAngle);
+        const bandRot = rotateZ(bandAngle);
+        const diamTrans = translate(0.5, 0.0, 0.0);
+        let currPoint = [minorDiam, 0.0, 0.0, 1.0];
+        for (let i = 0; i < segments; i++) {
+            let newPoint = matVecMul(bandRot, currPoint);
+            segment.push(...quad(matVecMul(diamTrans, currPoint), matVecMul(segmentRot, matVecMul(diamTrans, currPoint)), matVecMul(segmentRot, matVecMul(diamTrans, newPoint)), matVecMul(diamTrans, newPoint)));
+            currPoint = newPoint;
+        }
+        // build full torus
+        let res = [...segment];
+        for (let i = 1; i < segments; i++) {
+            let rot = rotateY(segmentAngle * i);
+            res.push(...segment.map(v => matVecMul(rot, v)));
+        }
+        return res;
     }
     Mesh.torus = torus;
 })(Mesh || (Mesh = {}));
