@@ -179,6 +179,7 @@ namespace Mesh {
         let old1 = matVecMul(bandRot, top);
         let old2 = matVecMul(segmentRot, old1);
 
+        // top triangle
         segment.push(top, old1, old2);
 
         // 2 less because the triangles on each part of it aren't counted
@@ -187,6 +188,7 @@ namespace Mesh {
             let new1 = matVecMul(bandRot, old1);
             let new2 = matVecMul(segmentRot, new1);
 
+            // 1 quad on the segment
             segment.push(...quad(old1, new1, new2, old2));
 
             old1 = new1;
@@ -200,6 +202,7 @@ namespace Mesh {
         let res = [...segment];
 
         for (let i = 1; i < segments; i++) {
+            // rotate a copy of the segment to the right place and add it
             let rot = rotateY(segmentAngle * i);
             res.push(...segment.map(v => matVecMul(rot, v)));
         }
@@ -234,11 +237,14 @@ namespace Mesh {
         const bandRot = rotateZ(bandAngle);
         const diamTrans = translate(0.5, 0.0, 0.0);
 
+        // starting position on the circle
         let currPoint: vec4 = [minorDiam, 0.0, 0.0, 1.0];
 
         for (let i = 0; i < segments; i++) {
+            // next point on the circle
             let newPoint = matVecMul(bandRot, currPoint);
 
+            // translate/rotate each point to it's correct position and make a quad
             segment.push(...quad(
                 matVecMul(diamTrans, currPoint),
                 matVecMul(segmentRot, matVecMul(diamTrans, currPoint)),
@@ -253,6 +259,7 @@ namespace Mesh {
         let res = [...segment];
 
         for (let i = 1; i < segments; i++) {
+            // rotate a copy of the segment to the right place and add it
             let rot = rotateY(segmentAngle * i);
             res.push(...segment.map(v => matVecMul(rot, v)));
         }
