@@ -162,29 +162,29 @@ var Starter;
     // This function will be called when a mouse button is down inside the canvas.
     function mouseDownCallback(event) {
         console.log("mouseDownCallback(): " +
-            "event.which = " + event.which +
+            "event.button = " + event.button +
             ", x = " + (event.clientX - canvas.offsetLeft) +
             ", y = " + (event.clientY - canvas.offsetTop));
     }
     // This function will be called when a mouse button is up inside the canvas
     function mouseUpCallback(event) {
         console.log("mouseUpCallback(): " +
-            "event.which = " + event.which +
+            "event.button = " + event.button +
             ", x = " + (event.clientX - canvas.offsetLeft) +
             ", y = " + (event.clientY - canvas.offsetTop));
     }
     // This function will be called when a mouse pointer moves over the canvas.
     function mouseMoveCallback(event) {
         console.log("mouseMoveCallback(): " +
-            "event.which = " + event.which +
+            "event.button = " + event.button +
             ", x = " + (event.clientX - canvas.offsetLeft) +
             ", y = " + (event.clientY - canvas.offsetTop));
     }
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {
         console.log("keyDownCallback(): " +
-            "event.keyCode = " + event.keyCode);
-        if (event.keyCode === 32) {
+            "event.key = " + event.key);
+        if (event.key === " ") {
             isAnimating = !isAnimating;
             if (isAnimating)
                 requestAnimationFrame(idle);
@@ -198,10 +198,10 @@ var Starter;
             return -1;
         // Register callback functions
         // Comment out those that are not used.
-        canvas.onmousedown = mouseDownCallback;
-        canvas.onmouseup = mouseUpCallback;
-        canvas.onmousemove = mouseMoveCallback;
-        document.onkeydown = keyDownCallback;
+        canvas.addEventListener("mousedown", mouseDownCallback);
+        canvas.addEventListener("mouseup", mouseUpCallback);
+        canvas.addEventListener("mousemove", mouseMoveCallback);
+        document.addEventListener("keydown", keyDownCallback);
         display();
         if (isAnimating)
             requestAnimationFrame(idle);

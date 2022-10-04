@@ -122,28 +122,33 @@ namespace Lab03_2 {
     }
 
     function keyDownCallback(event: KeyboardEvent) {
-        if (event.keyCode === 32) {
-            ctm_index += 1;
-            if (ctm_index === 4)
-                ctm_index = 0;
+        switch (event.key) {
+            case " ":
+                ctm_index += 1;
+                if (ctm_index === 4)
+                    ctm_index = 0;
 
-            console.log("Tilting backward " + degs[ctm_index] + " degrees");
-            display();
-        } else if (event.keyCode === 67) {
-            offset = 0;
-            currNumVerts = cubeVerts;
-            console.log("Displaying cube");
-            display();
-        } else if (event.keyCode === 79) {
-            offset = cubeVerts;
-            currNumVerts = coneVerts;
-            console.log("Displaying cone");
-            display();
-        } else if (event.keyCode === 76) {
-            offset = cubeVerts + coneVerts;
-            currNumVerts = cylinderVerts;
-            console.log("Displaying cylinder");
-            display();
+                console.log("Tilting backward " + degs[ctm_index] + " degrees");
+                display();
+                break;
+            case "c":
+                offset = 0;
+                currNumVerts = cubeVerts;
+                console.log("Displaying cube");
+                display();
+                break;
+            case "o":
+                offset = cubeVerts;
+                currNumVerts = coneVerts;
+                console.log("Displaying cone");
+                display();
+                break;
+            case "l":
+                offset = cubeVerts + coneVerts;
+                currNumVerts = cylinderVerts;
+                console.log("Displaying cylinder");
+                display();
+                break;
         }
     }
 
@@ -154,7 +159,7 @@ namespace Lab03_2 {
         if (init() === -1)
             return -1;
 
-        document.onkeydown = keyDownCallback;
+        document.addEventListener('keydown', keyDownCallback);
 
         display();
     }

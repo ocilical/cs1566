@@ -123,7 +123,7 @@ namespace Lab03 {
     }
 
     function keyDownCallback(event: KeyboardEvent) {
-        if (event.keyCode === 32) {
+        if (event.key === " ") {
             ctm_index += 1;
             if (ctm_index === 4)
                 ctm_index = 0;
@@ -140,7 +140,7 @@ namespace Lab03 {
         if (init() === -1)
             return -1;
 
-        document.onkeydown = keyDownCallback;
+        document.addEventListener("keydown", keyDownCallback);
 
         display();
     }

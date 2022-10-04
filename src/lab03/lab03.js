@@ -111,7 +111,7 @@ var Lab03;
         gl.drawArrays(gl.TRIANGLES, 0, coneSegments * 6);
     }
     function keyDownCallback(event) {
-        if (event.keyCode === 32) {
+        if (event.key === " ") {
             ctm_index += 1;
             if (ctm_index === 4)
                 ctm_index = 0;
@@ -125,7 +125,7 @@ var Lab03;
             return -1;
         if (init() === -1)
             return -1;
-        document.onkeydown = keyDownCallback;
+        document.addEventListener("keydown", keyDownCallback);
         display();
     }
     Lab03.main = main;
