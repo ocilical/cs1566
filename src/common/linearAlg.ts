@@ -147,10 +147,10 @@ function matSub(m1: mat4, m2: mat4): mat4 {
  * multiply a vector with a matrix, m * V
  */
 function matVecMul(m: mat4, v: vec4): vec4 {
-    let v0 = vecScale(v[0], m[0]);
-    let v1 = vecScale(v[1], m[1]);
-    let v2 = vecScale(v[2], m[2]);
-    let v3 = vecScale(v[3], m[3]);
+    const v0 = vecScale(v[0], m[0]);
+    const v1 = vecScale(v[1], m[1]);
+    const v2 = vecScale(v[2], m[2]);
+    const v3 = vecScale(v[3], m[3]);
 
     return vecAdd(vecAdd(v0, v1), vecAdd(v2, v3));
 }
@@ -183,10 +183,10 @@ function matTransp(m: mat4): mat4 {
  * calculate inverse of a matrix
  */
 function matInv(m: mat4): mat4 {
-    let minor = matMinor(m);
-    let cofactor = matCofactor(minor);
-    let transpose = matTransp(cofactor);
-    let determinant = matDet(m, minor);
+    const minor = matMinor(m);
+    const cofactor = matCofactor(minor);
+    const transpose = matTransp(cofactor);
+    const determinant = matDet(m, minor);
     if (determinant === 0) {
         throw new Error("matrix is not invertable");
     }
@@ -309,7 +309,7 @@ function scale(x: number, y: number, z: number): mat4 {
 /**
  * returns rotation matrix about the x-axis for a given degree
  */
-function rotateX(degree: number): mat4 {
+function rotateX(degree: number, origin?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -318,12 +318,18 @@ function rotateX(degree: number): mat4 {
         [0.0, 0.0, 0.0, 1.0],  // fourth column
     ];
 
-    let radian = degree * Math.PI / 180.0;
+    const radian = degree * Math.PI / 180.0;
 
     result[1][1] = Math.cos(radian);
     result[1][2] = Math.sin(radian);
     result[2][1] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
+
+    if (origin) {
+        const orginify = translate(-origin[0], -origin[1], -origin[2]);
+        const unorginify = translate(origin[0], origin[1], origin[2]);
+        result = matMul(unorginify, matMul(result, orginify));
+    }
 
     return result;
 }
@@ -331,7 +337,7 @@ function rotateX(degree: number): mat4 {
 /**
  * returns rotation matrix about the y-axis for a given degree
  */
-function rotateY(degree: number): mat4 {
+function rotateY(degree: number, origin?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -340,12 +346,18 @@ function rotateY(degree: number): mat4 {
         [0.0, 0.0, 0.0, 1.0],  // fourth column
     ];
 
-    let radian = degree * Math.PI / 180.0;
+    const radian = degree * Math.PI / 180.0;
 
     result[0][0] = Math.cos(radian);
     result[2][0] = Math.sin(radian);
     result[0][2] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
+
+    if (origin) {
+        const orginify = translate(-origin[0], -origin[1], -origin[2]);
+        const unorginify = translate(origin[0], origin[1], origin[2]);
+        result = matMul(unorginify, matMul(result, orginify));
+    }
 
     return result;
 }
@@ -353,7 +365,7 @@ function rotateY(degree: number): mat4 {
 /**
  * returns rotation matrix about the z-axis for a given degree
  */
-function rotateZ(degree: number): mat4 {
+function rotateZ(degree: number, origin?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -362,12 +374,18 @@ function rotateZ(degree: number): mat4 {
         [0.0, 0.0, 0.0, 1.0],  // fourth column
     ];
 
-    let radian = degree * Math.PI / 180.0;
+    const radian = degree * Math.PI / 180.0;
 
     result[0][0] = Math.cos(radian);
     result[0][1] = Math.sin(radian);
     result[1][0] = -Math.sin(radian);
     result[1][1] = Math.cos(radian);
+
+    if (origin) {
+        const orginify = translate(-origin[0], -origin[1], -origin[2]);
+        const unorginify = translate(origin[0], origin[1], origin[2]);
+        result = matMul(unorginify, matMul(result, orginify));
+    }
 
     return result;
 }
