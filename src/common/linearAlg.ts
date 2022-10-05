@@ -307,7 +307,8 @@ function scale(x: number, y: number, z: number): mat4 {
 }
 
 /**
- * returns rotation matrix about the x-axis for a given degree
+ * returns rotation matrix about the x-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateX(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
@@ -335,7 +336,8 @@ function rotateX(degree: number, center?: vec4): mat4 {
 }
 
 /**
- * returns rotation matrix about the y-axis for a given degree
+ * returns rotation matrix about the y-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateY(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
@@ -363,7 +365,8 @@ function rotateY(degree: number, center?: vec4): mat4 {
 }
 
 /**
- * returns rotation matrix about the z-axis for a given degree
+ * returns rotation matrix about the z-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateZ(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)

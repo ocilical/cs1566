@@ -269,7 +269,8 @@ function scale(x, y, z) {
     ];
 }
 /**
- * returns rotation matrix about the x-axis for a given degree
+ * returns rotation matrix about the x-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateX(degree, center) {
     // A result is a 4 x 4 matrix (column major)
@@ -292,7 +293,8 @@ function rotateX(degree, center) {
     return result;
 }
 /**
- * returns rotation matrix about the y-axis for a given degree
+ * returns rotation matrix about the y-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateY(degree, center) {
     // A result is a 4 x 4 matrix (column major)
@@ -315,7 +317,8 @@ function rotateY(degree, center) {
     return result;
 }
 /**
- * returns rotation matrix about the z-axis for a given degree
+ * returns rotation matrix about the z-axis for a given degree,
+ * center is optional and defines the center of rotation, defaults to the origin
  */
 function rotateZ(degree, center) {
     // A result is a 4 x 4 matrix (column major)
