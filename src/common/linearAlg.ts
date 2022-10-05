@@ -309,7 +309,7 @@ function scale(x: number, y: number, z: number): mat4 {
 /**
  * returns rotation matrix about the x-axis for a given degree
  */
-function rotateX(degree: number, origin?: vec4): mat4 {
+function rotateX(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -325,10 +325,10 @@ function rotateX(degree: number, origin?: vec4): mat4 {
     result[2][1] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
 
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
 
     return result;
@@ -337,7 +337,7 @@ function rotateX(degree: number, origin?: vec4): mat4 {
 /**
  * returns rotation matrix about the y-axis for a given degree
  */
-function rotateY(degree: number, origin?: vec4): mat4 {
+function rotateY(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -353,10 +353,10 @@ function rotateY(degree: number, origin?: vec4): mat4 {
     result[0][2] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
 
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
 
     return result;
@@ -365,7 +365,7 @@ function rotateY(degree: number, origin?: vec4): mat4 {
 /**
  * returns rotation matrix about the z-axis for a given degree
  */
-function rotateZ(degree: number, origin?: vec4): mat4 {
+function rotateZ(degree: number, center?: vec4): mat4 {
     // A result is a 4 x 4 matrix (column major)
     let result: mat4 = [
         [1.0, 0.0, 0.0, 0.0],  // first column
@@ -381,10 +381,10 @@ function rotateZ(degree: number, origin?: vec4): mat4 {
     result[1][0] = -Math.sin(radian);
     result[1][1] = Math.cos(radian);
 
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
 
     return result;

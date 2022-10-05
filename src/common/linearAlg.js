@@ -271,7 +271,7 @@ function scale(x, y, z) {
 /**
  * returns rotation matrix about the x-axis for a given degree
  */
-function rotateX(degree, origin) {
+function rotateX(degree, center) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -284,17 +284,17 @@ function rotateX(degree, origin) {
     result[1][2] = Math.sin(radian);
     result[2][1] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
     return result;
 }
 /**
  * returns rotation matrix about the y-axis for a given degree
  */
-function rotateY(degree, origin) {
+function rotateY(degree, center) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -307,17 +307,17 @@ function rotateY(degree, origin) {
     result[2][0] = Math.sin(radian);
     result[0][2] = -Math.sin(radian);
     result[2][2] = Math.cos(radian);
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
     return result;
 }
 /**
  * returns rotation matrix about the z-axis for a given degree
  */
-function rotateZ(degree, origin) {
+function rotateZ(degree, center) {
     // A result is a 4 x 4 matrix (column major)
     let result = [
         [1.0, 0.0, 0.0, 0.0],
@@ -330,10 +330,10 @@ function rotateZ(degree, origin) {
     result[0][1] = Math.sin(radian);
     result[1][0] = -Math.sin(radian);
     result[1][1] = Math.cos(radian);
-    if (origin) {
-        const orginify = translate(-origin[0], -origin[1], -origin[2]);
-        const unorginify = translate(origin[0], origin[1], origin[2]);
-        result = matMul(unorginify, matMul(result, orginify));
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
     }
     return result;
 }
