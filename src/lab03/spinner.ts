@@ -10,7 +10,7 @@ namespace Spinner {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ];
-    const cone_base_ctm: mat4 = rotateZ(40);
+    const cone_base_ctm: mat4 = identity;//rotateZ(40);
     let cone_ctm = identity;
     let isAnimating = true;
     let cone_degree = 0.0;
@@ -39,7 +39,7 @@ namespace Spinner {
         if (!gl) return -1;
 
         // generate cone and colors for it
-        positions = Mesh.torus(64, 16);//Mesh.cylinder(segments);
+        positions = Mesh.cube();//Mesh.torus(64, 16);//Mesh.cylinder(segments);
         let colors: vec4[] = Mesh.randomColors(positions.length);
 
         // Load and compile shader programs
@@ -107,7 +107,7 @@ namespace Spinner {
         if (cone_degree > 360.0)
             cone_degree = 0.0;
 
-        cone_ctm = matMul(rotateY(cone_degree), cone_base_ctm);
+        cone_ctm = matMul(rotateAxis(cone_degree, [1.0, 1.0, 1.0, 0.0]), cone_base_ctm);
 
         // Draw
         display();

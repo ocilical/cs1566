@@ -170,7 +170,7 @@ function matMul(m1: mat4, m2: mat4): mat4 {
 /**
  * calculate transpose of a matrix
  */
-function matTransp(m: mat4): mat4 {
+function matTrans(m: mat4): mat4 {
     return [
         [m[0][0], m[1][0], m[2][0], m[3][0]],
         [m[0][1], m[1][1], m[2][1], m[3][1]],
@@ -185,7 +185,7 @@ function matTransp(m: mat4): mat4 {
 function matInv(m: mat4): mat4 {
     const minor = matMinor(m);
     const cofactor = matCofactor(minor);
-    const transpose = matTransp(cofactor);
+    const transpose = matTrans(cofactor);
     const determinant = matDet(m, minor);
     if (determinant === 0) {
         throw new Error("matrix is not invertable");
@@ -304,6 +304,53 @@ function scale(x: number, y: number, z: number): mat4 {
         [0.0, 0.0, z, 0.0],
         [0.0, 0.0, 0.0, 1.0],
     ];
+}
+
+/**
+ * returns rotation matrix rotating about `axis`,
+ * if axis is a point and not a vector, it will break (axis[3] should be 0.0),
+ * center is optional and provides a center of rotation
+ */
+function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
+    // normalize axis
+    axis = vecNorm(axis);
+
+    // length of vector projected to yz plane
+    let d = Math.sqrt(axis[1] * axis[1] + axis[2] * axis[2]);
+
+    // matrix to rotate about x axis to xz plane
+    let rotX: mat4 = [
+        [1, 0, 0, 0],
+        [0, axis[2] / d, axis[1] / d, 0],
+        [0, -axis[1] / d, axis[2] / d, 0],
+        [0, 0, 0, 1],
+    ];
+
+    // special case makes inversion easy!
+    let rotXInv = matTrans(rotX);
+
+    // matrix to rotate about y axis to z axis
+    let rotY: mat4 = [
+        [d, 0, axis[0], 0],
+        [0, 1, 0, 0],
+        [-axis[0], 0, d, 0],
+        [0, 0, 0, 1],
+    ];
+
+    // special case makes inversion easy!
+    let rotYInv = matTrans(rotY);
+
+    let rotZ = rotateZ(degree);
+
+    let result = matMul(rotXInv, matMul(rotYInv, matMul(rotZ, matMul(rotY, rotX))));
+
+    if (center) {
+        const centerify = translate(-center[0], -center[1], -center[2]);
+        const uncenterify = translate(center[0], center[1], center[2]);
+        result = matMul(uncenterify, matMul(result, centerify));
+    }
+
+    return result;
 }
 
 /**

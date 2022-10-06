@@ -54,7 +54,7 @@ namespace TestLinearAlgebra {
     console.log("m1 * m2:");
     matPrint(matMul(m1, m2));
     console.log("m1^T (transpose):");
-    matPrint(matTransp(m1));
+    matPrint(matTrans(m1));
     console.log("m1^{-1} (inverse):");
     matPrint(matInv(m1));
     console.log("m1 * m1^{-1}:");
