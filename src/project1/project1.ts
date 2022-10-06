@@ -25,6 +25,9 @@ namespace Project1 {
     let currOffset: number;
     let currSize: number;
 
+    // keep track of zoom
+    let currZoom: number = 1;
+
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -62,7 +65,7 @@ namespace Project1 {
         objSizes.cylinder = cylinder.length;
         positions.push(...cylinder);
 
-        let sphere = Mesh.sphere(32, 16);
+        let sphere = Mesh.sphere(32, 16).map(v => matVecMul(scale(2, 2, 2), v));
         objOffsets.sphere = positions.length;
         objSizes.sphere = sphere.length;
         positions.push(...sphere);
@@ -136,7 +139,7 @@ namespace Project1 {
     }
 
     function idle() {
-        ctm = identity;
+        ctm = scale(currZoom, currZoom, currZoom);
 
         // Draw
         display();
@@ -167,6 +170,17 @@ namespace Project1 {
             "event.button = " + event.button +
             ", x = " + (event.clientX - canvas!.offsetLeft) +
             ", y = " + (event.clientY - canvas!.offsetTop));
+    }
+
+    function wheelCallback(event: WheelEvent) {
+        console.log(`wheelCallback(): event.deltaY = ${event.deltaY}`);
+        // stop it from actually scrolling
+        event.preventDefault();
+        // do the scaling part
+        currZoom += -event.deltaY * 0.001;
+        // don't want to zoom too far in or out
+        currZoom = Math.min(10, Math.max(currZoom, 0));
+        console.log(`currZoom = ${currZoom}`);
     }
 
     // This function will be called when a keyboard is pressed.
@@ -200,6 +214,14 @@ namespace Project1 {
                 currSize = objSizes.torus;
                 console.log("displaying torus");
                 break;
+            case "=":
+                // zoom in
+                currZoom += 0.1;
+                break;
+            case "-":
+                // zoom out
+                currZoom -= 0.1;
+                break;
         }
     }
 
@@ -215,6 +237,7 @@ namespace Project1 {
         canvas.addEventListener("mousedown", mouseDownCallback);
         canvas.addEventListener("mouseup", mouseUpCallback);
         canvas.addEventListener("mousemove", mouseMoveCallback);
+        canvas.addEventListener("wheel", wheelCallback);
         document.addEventListener("keydown", keyDownCallback);
 
 

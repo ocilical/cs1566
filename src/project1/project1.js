@@ -23,6 +23,8 @@ var Project1;
     let objSizes = {};
     let currOffset;
     let currSize;
+    // keep track of zoom
+    let currZoom = 1;
     function initGL(canvas) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -53,7 +55,7 @@ var Project1;
         objOffsets.cylinder = positions.length;
         objSizes.cylinder = cylinder.length;
         positions.push(...cylinder);
-        let sphere = Mesh.sphere(32, 16);
+        let sphere = Mesh.sphere(32, 16).map(v => matVecMul(scale(2, 2, 2), v));
         objOffsets.sphere = positions.length;
         objSizes.sphere = sphere.length;
         positions.push(...sphere);
@@ -115,7 +117,7 @@ var Project1;
         gl.drawArrays(gl.TRIANGLES, currOffset, currSize);
     }
     function idle() {
-        ctm = identity;
+        ctm = scale(currZoom, currZoom, currZoom);
         // Draw
         display();
         //if (isAnimating === true)
@@ -141,6 +143,16 @@ var Project1;
             "event.button = " + event.button +
             ", x = " + (event.clientX - canvas.offsetLeft) +
             ", y = " + (event.clientY - canvas.offsetTop));
+    }
+    function wheelCallback(event) {
+        console.log(`wheelCallback(): event.deltaY = ${event.deltaY}`);
+        // stop it from actually scrolling
+        event.preventDefault();
+        // do the scaling part
+        currZoom += -event.deltaY * 0.001;
+        // don't want to zoom too far in or out
+        currZoom = Math.min(10, Math.max(currZoom, 0));
+        console.log(`currZoom = ${currZoom}`);
     }
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {
@@ -172,6 +184,14 @@ var Project1;
                 currSize = objSizes.torus;
                 console.log("displaying torus");
                 break;
+            case "=":
+                // zoom in
+                currZoom += 0.1;
+                break;
+            case "-":
+                // zoom out
+                currZoom -= 0.1;
+                break;
         }
     }
     function main() {
@@ -185,6 +205,7 @@ var Project1;
         canvas.addEventListener("mousedown", mouseDownCallback);
         canvas.addEventListener("mouseup", mouseUpCallback);
         canvas.addEventListener("mousemove", mouseMoveCallback);
+        canvas.addEventListener("wheel", wheelCallback);
         document.addEventListener("keydown", keyDownCallback);
         display();
         //if (isAnimating)
