@@ -4,7 +4,7 @@ namespace Project1 {
     let gl: WebGLRenderingContext | null;
     let canvas: HTMLCanvasElement | null;
     let ctm_location: WebGLUniformLocation | null;
-    let identity: mat4 = [
+    const identity: mat4 = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
