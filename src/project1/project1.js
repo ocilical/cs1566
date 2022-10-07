@@ -150,7 +150,6 @@ var Project1;
         currRotMat = matMul(rotMat, currRotMat);
         if (currRotMat.some(arr => arr.some(isNaN))) {
             console.log("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
-            debugger;
         }
         let scaleMat = scale(currZoom, currZoom, currZoom);
         let temp = matMul(currRotMat, scaleMat);
@@ -165,10 +164,6 @@ var Project1;
     // This function will be called when a mouse button is down inside the canvas.
     function mouseDownCallback(event) {
         event.preventDefault();
-        console.log("mouseDownCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas.offsetLeft) +
-            ", y = " + (event.clientY - canvas.offsetTop));
         mouseDown = true;
         currMousePos = [event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop];
         prevMousePos = currMousePos;
@@ -176,10 +171,6 @@ var Project1;
     // This function will be called when a mouse button is up inside the canvas
     function mouseUpCallback(event) {
         event.preventDefault();
-        console.log("mouseUpCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas.offsetLeft) +
-            ", y = " + (event.clientY - canvas.offsetTop));
         mouseDown = false;
     }
     // This function will be called when a mouse pointer moves over the canvas.
@@ -190,7 +181,6 @@ var Project1;
         }
     }
     function wheelCallback(event) {
-        console.log(`wheelCallback(): event.deltaY = ${event.deltaY}`);
         // stop it from actually scrolling
         event.preventDefault();
         // do the scaling part
@@ -201,8 +191,6 @@ var Project1;
     }
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {
-        console.log("keyDownCallback(): " +
-            "event.key = " + event.key);
         switch (event.key) {
             case "c":
                 currOffset = objOffsets.cube;
