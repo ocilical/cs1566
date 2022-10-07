@@ -318,7 +318,7 @@ function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
 
     // check for special case that will cause a divide by 0, rotating about the x axis
     // (because axis_y and axis_z are both 0)
-    if (axis[1] == 0 && axis[2] == 0) {
+    if (axis[1] === 0 && axis[2] === 0) {
         return axis[0] < 0 ? rotateX(-degree) : rotateX(degree);
     }
 
