@@ -180,7 +180,7 @@ namespace Project1 {
 
         // debug output, just in case
         if (currRotMat.some(arr => arr.some(isNaN))) {
-            console.log("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
+            console.error("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
         }
 
         let scaleMat = scale(currZoom, currZoom, currZoom);
