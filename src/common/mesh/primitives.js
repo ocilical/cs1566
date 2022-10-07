@@ -172,7 +172,7 @@ var Mesh;
             return [];
         }
         // default minor diameter if not provided
-        minorDiam = minorDiam !== null && minorDiam !== void 0 ? minorDiam : 0.2;
+        minorDiam !== null && minorDiam !== void 0 ? minorDiam : (minorDiam = 0.2);
         // calculate angles
         const segmentAngle = (1 / segments) * 360;
         const bandAngle = (1 / bands) * 360;

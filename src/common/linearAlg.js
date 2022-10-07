@@ -215,7 +215,7 @@ function matCofactor(m) {
  * if minor is not provided it will be calculated
  */
 function matDet(m, minor) {
-    minor = minor !== null && minor !== void 0 ? minor : matMinor(m);
+    minor !== null && minor !== void 0 ? minor : (minor = matMinor(m));
     return m[0][0] * minor[0][0] - m[0][1] * minor[0][1] + m[0][2] * minor[0][2] - m[0][3] * minor[0][3];
 }
 /**

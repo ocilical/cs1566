@@ -225,7 +225,7 @@ namespace Mesh {
         }
 
         // default minor diameter if not provided
-        minorDiam = minorDiam ?? 0.2;
+        minorDiam ??= 0.2;
 
         // calculate angles
         const segmentAngle = (1 / segments) * 360;
