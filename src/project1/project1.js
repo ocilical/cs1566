@@ -12,12 +12,7 @@ var Project1;
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ];
-    let ctm = [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ];
+    let ctm = identity;
     let positions;
     let objOffsets = {};
     let objSizes = {};
@@ -31,12 +26,7 @@ var Project1;
     let mouseDown = false;
     let prevMousePos;
     let currMousePos;
-    let currRotMat = [
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1],
-    ];
+    let currRotMat = identity;
     let currRotAxis = [0.0, 1.0, 0.0, 0.0];
     let currRotSpeed = 0.0;
     function initGL(canvas) {
@@ -155,7 +145,7 @@ var Project1;
         currRotMat = matMul(rotMat, currRotMat);
         // debug output, just in case
         if (currRotMat.some(arr => arr.some(isNaN))) {
-            console.log("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
+            console.error("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
         }
         let scaleMat = scale(currZoom, currZoom, currZoom);
         ctm = matMul(currRotMat, scaleMat);

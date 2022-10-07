@@ -10,12 +10,7 @@ namespace Project1 {
         [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ];
-    let ctm: mat4 = [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
-    ];
+    let ctm: mat4 = identity;
     let positions: vec4[];
 
     // stuff for switching object
@@ -34,12 +29,7 @@ namespace Project1 {
     let mouseDown: boolean = false;
     let prevMousePos: [number, number];
     let currMousePos: [number, number];
-    let currRotMat: mat4 = [
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1],
-    ];
+    let currRotMat: mat4 = identity;
     let currRotAxis: vec4 = [0.0, 1.0, 0.0, 0.0];
     let currRotSpeed: number = 0.0;
 
