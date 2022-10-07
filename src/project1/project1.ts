@@ -27,7 +27,7 @@ namespace Project1 {
 
     // keep track of zoom
     let currZoom: number = 1;
-    const minZoom: number = 0.1;
+    const minZoom: number = 0.01;
     const maxZoom: number = 5;
 
     // camera variables :)
@@ -155,34 +155,39 @@ namespace Project1 {
     }
 
     function idle() {
+        // ensure that the mouse position has been defined
         if (mouseDown && prevMousePos && currMousePos) {
+            // convert from screen space to webgl space
             const prevPos = mouseCoordsToGL(prevMousePos);
             const currPos = mouseCoordsToGL(currMousePos);
+            // make sure that worked
             if (currPos && prevPos) {
                 if (vecEquals(currPos, prevPos)) {
+                    // cross product would be 0 vec and everything would be ruined, so just make it this
                     currRotAxis = [0.0, 1.0, 0.0, 0.0];
                     currRotSpeed = 0.0;
                 } else {
+                    // calculate rotation axis and amount to rotate
                     currRotAxis = vecCross(prevPos, currPos);
-                    //vecPrint(currRotAxis);
                     currRotSpeed = Math.acos(vecDot(prevPos, currPos) / (vecLength(prevPos) * vecLength(currPos))) * 180 / Math.PI;
                 }
             }
         }
 
+        // rotate regardless of weather the mouse is down (for the frictionless rotation)
         let rotMat = rotateAxis(currRotSpeed, currRotAxis);
         currRotMat = matMul(rotMat, currRotMat);
 
+        // debug output, just in case
         if (currRotMat.some(arr => arr.some(isNaN))) {
             console.log("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
         }
 
         let scaleMat = scale(currZoom, currZoom, currZoom);
 
-        let temp = matMul(currRotMat, scaleMat);
-        //matPrint(temp);
-        ctm = temp;
+        ctm = matMul(currRotMat, scaleMat);
 
+        // just drew, so update the mouse position for next frame
         prevMousePos = currMousePos;
 
         // Draw
@@ -196,6 +201,7 @@ namespace Project1 {
     function mouseDownCallback(event: MouseEvent) {
         event.preventDefault();
         mouseDown = true;
+        // set both current and prev mouse pos to prevent weird jumping when moving after clicking
         currMousePos = [event.clientX - canvas!.offsetLeft, event.clientY - canvas!.offsetTop];
         prevMousePos = currMousePos;
     }
@@ -221,7 +227,6 @@ namespace Project1 {
         currZoom += -event.deltaY * 0.001;
         // don't want to zoom too far in or out
         currZoom = Math.min(maxZoom, Math.max(currZoom, minZoom));
-        console.log(`currZoom = ${currZoom}`);
     }
 
     // This function will be called when a keyboard is pressed.
@@ -286,10 +291,12 @@ namespace Project1 {
             return -1;
 
         // Register callback functions
-        // Comment out those that are not used.
         canvas.addEventListener("mousedown", mouseDownCallback);
+
+        // both get mouse up callback so that the mouse leaving the canvas doesn't break the mousedown variable
         canvas.addEventListener("mouseout", mouseUpCallback);
         canvas.addEventListener("mouseup", mouseUpCallback);
+
         canvas.addEventListener("mousemove", mouseMoveCallback);
         canvas.addEventListener("wheel", wheelCallback);
         document.addEventListener("keydown", keyDownCallback);
