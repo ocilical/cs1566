@@ -27,6 +27,22 @@ namespace Project1 {
 
     // keep track of zoom
     let currZoom: number = 1;
+    const minZoom: number = 0.1;
+    const maxZoom: number = 5;
+
+    // camera variables :)
+    let mouseDown: boolean = false;
+    let prevMousePos: [number, number];
+    let currMousePos: [number, number];
+    let currRotMat: mat4 = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ];
+    let currRotAxis: vec4 = [0.0, 1.0, 0.0, 0.0];
+    let currRotSpeed: number = 0.0;
+
 
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
@@ -139,7 +155,36 @@ namespace Project1 {
     }
 
     function idle() {
-        ctm = scale(currZoom, currZoom, currZoom);
+        if (mouseDown && prevMousePos && currMousePos) {
+            const prevPos = mouseCoordsToGL(prevMousePos);
+            const currPos = mouseCoordsToGL(currMousePos);
+            if (currPos && prevPos) {
+                if (vecEquals(currPos, prevPos)) {
+                    currRotAxis = [0.0, 1.0, 0.0, 0.0];
+                    currRotSpeed = 0.0;
+                } else {
+                    currRotAxis = vecCross(prevPos, currPos);
+                    //vecPrint(currRotAxis);
+                    currRotSpeed = Math.acos(vecDot(prevPos, currPos) / (vecLength(prevPos) * vecLength(currPos))) * 180 / Math.PI;
+                }
+            }
+        }
+
+        let rotMat = rotateAxis(currRotSpeed, currRotAxis);
+        currRotMat = matMul(rotMat, currRotMat);
+
+        if (currRotMat.some(arr => arr.some(isNaN))) {
+            console.log("if you're seeing this, something horrible has happened and a NaN got into the rotation matrix, sorry :(");
+            debugger;
+        }
+
+        let scaleMat = scale(currZoom, currZoom, currZoom);
+
+        let temp = matMul(currRotMat, scaleMat);
+        //matPrint(temp);
+        ctm = temp;
+
+        prevMousePos = currMousePos;
 
         // Draw
         display();
@@ -150,26 +195,32 @@ namespace Project1 {
 
     // This function will be called when a mouse button is down inside the canvas.
     function mouseDownCallback(event: MouseEvent) {
+        event.preventDefault();
         console.log("mouseDownCallback(): " +
             "event.button = " + event.button +
             ", x = " + (event.clientX - canvas!.offsetLeft) +
             ", y = " + (event.clientY - canvas!.offsetTop));
+        mouseDown = true;
+        currMousePos = [event.clientX - canvas!.offsetLeft, event.clientY - canvas!.offsetTop];
+        prevMousePos = currMousePos;
     }
 
     // This function will be called when a mouse button is up inside the canvas
     function mouseUpCallback(event: MouseEvent) {
+        event.preventDefault();
         console.log("mouseUpCallback(): " +
             "event.button = " + event.button +
             ", x = " + (event.clientX - canvas!.offsetLeft) +
             ", y = " + (event.clientY - canvas!.offsetTop));
+        mouseDown = false;
     }
 
     // This function will be called when a mouse pointer moves over the canvas.
     function mouseMoveCallback(event: MouseEvent) {
-        console.log("mouseMoveCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
+        if (mouseDown) {
+            // prevMousePos gets updated when idle runs so it doesn't look choppy if this event fires twice before drawing
+            currMousePos = [event.clientX - canvas!.offsetLeft, event.clientY - canvas!.offsetTop];
+        }
     }
 
     function wheelCallback(event: WheelEvent) {
@@ -179,7 +230,7 @@ namespace Project1 {
         // do the scaling part
         currZoom += -event.deltaY * 0.001;
         // don't want to zoom too far in or out
-        currZoom = Math.min(10, Math.max(currZoom, 0));
+        currZoom = Math.min(maxZoom, Math.max(currZoom, minZoom));
         console.log(`currZoom = ${currZoom}`);
     }
 
@@ -216,13 +267,28 @@ namespace Project1 {
                 break;
             case "=":
                 // zoom in
-                currZoom += 0.1;
+                currZoom += 0.05;
+                currZoom = Math.min(maxZoom, Math.max(currZoom, minZoom));
                 break;
             case "-":
                 // zoom out
-                currZoom -= 0.1;
+                currZoom -= 0.05;
+                currZoom = Math.min(maxZoom, Math.max(currZoom, minZoom));
                 break;
         }
+    }
+
+    /**
+     * convert mouse coordinates to WebGL coordinates on a sphere, returns null if not on sphere
+     */
+    function mouseCoordsToGL(mousePos: [number, number]): vec4 | null {
+        let x = (mousePos[0] / 512) * 2 - 1;
+        let y = (1 - (mousePos[1] / 512)) * 2 - 1;
+        let z = Math.sqrt(1 - x * x - y * y);
+        if (isNaN(z)) {
+            return null;
+        }
+        return [x, y, z, 0.0];
     }
 
     export function main() {
@@ -235,6 +301,7 @@ namespace Project1 {
         // Register callback functions
         // Comment out those that are not used.
         canvas.addEventListener("mousedown", mouseDownCallback);
+        canvas.addEventListener("mouseout", mouseUpCallback);
         canvas.addEventListener("mouseup", mouseUpCallback);
         canvas.addEventListener("mousemove", mouseMoveCallback);
         canvas.addEventListener("wheel", wheelCallback);

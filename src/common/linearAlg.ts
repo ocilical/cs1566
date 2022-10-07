@@ -309,11 +309,18 @@ function scale(x: number, y: number, z: number): mat4 {
 /**
  * returns rotation matrix rotating about `axis`,
  * if axis is a point and not a vector, it will break (axis[3] should be 0.0),
+ * if you give the axis as 0,0,0, you get the x axis sorry,
  * center is optional and provides a center of rotation
  */
 function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
     // normalize axis
     axis = vecNorm(axis);
+
+    // check for special case that will cause a divide by 0, rotating about the x axis
+    // (because axis_y and axis_z are both 0)
+    if (axis[1] == 0 && axis[2] == 0) {
+        return axis[0] < 0 ? rotateX(-degree) : rotateX(degree);
+    }
 
     // length of vector projected to yz plane
     let d = Math.sqrt(axis[1] * axis[1] + axis[2] * axis[2]);
