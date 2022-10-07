@@ -233,8 +233,8 @@ var Project1;
      * convert mouse coordinates to WebGL coordinates on a sphere, returns null if not on sphere
      */
     function mouseCoordsToGL(mousePos) {
-        let x = (mousePos[0] / 512) * 2 - 1;
-        let y = (1 - (mousePos[1] / 512)) * 2 - 1;
+        let x = (mousePos[0] / canvas.width) * 2 - 1;
+        let y = (1 - (mousePos[1] / canvas.height)) * 2 - 1;
         let z = Math.sqrt(1 - x * x - y * y);
         if (isNaN(z)) {
             return null;
