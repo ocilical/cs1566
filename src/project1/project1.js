@@ -6,7 +6,7 @@ var Project1;
     let gl;
     let canvas;
     let ctm_location;
-    let identity = [
+    const identity = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
