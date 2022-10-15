@@ -241,7 +241,7 @@ function matCofactor(m: mat4): mat4 {
  * calculate determinant of a matrix,
  * m is the matrix to find the det of,
  * minor is the minor matrix of m,
- * if minor is not provided it will be calculated 
+ * if minor is not provided it will be calculated
  */
 function matDet(m: mat4, minor?: mat4): number {
     minor ??= matMinor(m);

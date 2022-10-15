@@ -17,6 +17,18 @@ namespace Maze {
      * @returns new maze, as a 2d array of `MazeCell`s
      */
     export function genMaze(width: number, height: number): MazeCell[][] {
-        return [];
+        // set up outer walls
+        let maze: MazeCell[][] = [...Array(height)].map((_, row) => {
+            return [...Array(width)].map((_, col) => {
+                return {
+                    up: (row === 0),
+                    down: (row === (height - 1)),
+                    left: (col === 0),
+                    right: (col === (width - 1)),
+                } as MazeCell;
+            }) as MazeCell[];
+        });
+
+        return maze;
     }
 }

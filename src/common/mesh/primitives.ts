@@ -166,7 +166,7 @@ namespace Mesh {
         const top: vec4 = [0.0, 0.5, 0.0, 1.0];
         const bot: vec4 = [0.0, -0.5, 0.0, 1.0];
 
-        // band uses 180 because it's only accross half the sphere 
+        // band uses 180 because it's only accross half the sphere
         const segmentAngle = (1 / segments) * 360;
         const bandAngle = (1 / bands) * 180;
 
@@ -216,7 +216,7 @@ namespace Mesh {
      * @param segments number of vertical segments
      * @param bands number of horizontal bands
      * @param minorDiam [optional] minor diameter of torus, since you can't change it with a linear transformation
-     * @returns 
+     * @returns
      */
     export function torus(segments: number, bands: number, minorDiam?: number): vec4[] {
         // make sure it can actually be constructed with the provided numbers

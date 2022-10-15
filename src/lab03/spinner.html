@@ -16,12 +16,12 @@
 		      vec4(0,1,0,0),
 		      vec4(0,0,-1,0),
 		      vec4(0,0,0,1));
-    
+
     void main()
     {
 	vec4 position = ctm * vPosition;
 	color = vColor;
-	
+
 	// DO NOT MODIFY THE NEXT LINE
 	gl_Position = toRHR * position;
     }
@@ -30,9 +30,9 @@
 <!-- Fragment Shader -->
 <script id="fragment-shader" type="x-shader/x-fragment">
     precision mediump float;
-    
+
     varying vec4 color;
-    
+
     void main()
     {
 	gl_FragColor = color;
