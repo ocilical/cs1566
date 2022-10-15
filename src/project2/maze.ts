@@ -18,15 +18,15 @@ namespace Maze {
      */
     export function genMaze(width: number, height: number): MazeCell[][] {
         // set up outer walls
-        let maze: MazeCell[][] = [...Array(height)].map((_, row) => {
-            return [...Array(width)].map((_, col) => {
+        let maze: MazeCell[][] = [...Array(height)].map((_, row): MazeCell[] => {
+            return [...Array(width)].map((_, col): MazeCell => {
                 return {
                     up: (row === 0),
                     down: (row === (height - 1)),
                     left: (col === 0),
                     right: (col === (width - 1)),
-                } as MazeCell;
-            }) as MazeCell[];
+                };
+            });
         });
 
         return maze;
