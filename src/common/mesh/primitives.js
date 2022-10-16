@@ -125,7 +125,7 @@ var Mesh;
         // top and bottom of the sphere
         const top = [0.0, 0.5, 0.0, 1.0];
         const bot = [0.0, -0.5, 0.0, 1.0];
-        // band uses 180 because it's only accross half the sphere 
+        // band uses 180 because it's only accross half the sphere
         const segmentAngle = (1 / segments) * 360;
         const bandAngle = (1 / bands) * 180;
         // build first segment
@@ -175,7 +175,9 @@ var Mesh;
         minorDiam !== null && minorDiam !== void 0 ? minorDiam : (minorDiam = 0.2);
         // calculate angles
         const segmentAngle = (1 / segments) * 360;
+        console.log(`segments: ${segments} segment angle: ${segmentAngle}`);
         const bandAngle = (1 / bands) * 360;
+        console.log(`bands: ${bands} band angle: ${bandAngle}`);
         // build first segment
         let segment = [];
         const segmentRot = rotateY(segmentAngle);
@@ -183,7 +185,7 @@ var Mesh;
         const diamTrans = translate(0.5, 0.0, 0.0);
         // starting position on the circle
         let currPoint = [minorDiam, 0.0, 0.0, 1.0];
-        for (let i = 0; i < segments; i++) {
+        for (let i = 0; i < bands; i++) {
             // next point on the circle
             let newPoint = matVecMul(bandRot, currPoint);
             // translate/rotate each point to it's correct position and make a quad

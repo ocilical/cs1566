@@ -229,7 +229,9 @@ namespace Mesh {
 
         // calculate angles
         const segmentAngle = (1 / segments) * 360;
+        console.log(`segments: ${segments} segment angle: ${segmentAngle}`);
         const bandAngle = (1 / bands) * 360;
+        console.log(`bands: ${bands} band angle: ${bandAngle}`);
 
         // build first segment
         let segment = [];
@@ -240,7 +242,7 @@ namespace Mesh {
         // starting position on the circle
         let currPoint: vec4 = [minorDiam, 0.0, 0.0, 1.0];
 
-        for (let i = 0; i < segments; i++) {
+        for (let i = 0; i < bands; i++) {
             // next point on the circle
             let newPoint = matVecMul(bandRot, currPoint);
 
