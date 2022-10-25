@@ -8,11 +8,25 @@ var Mesh;
      */
     function randomColors(triangles) {
         return [...Array(triangles)].flatMap(() => {
-            let color = [Math.random(), Math.random(), Math.random(), 1.0];
+            const color = [Math.random(), Math.random(), Math.random(), 1.0];
             return [color, color, color];
         });
     }
     Mesh.randomColors = randomColors;
+    /**
+     * generate colors for quads
+     * @param triangles number of triangles, must be divisible by 2
+     * @returns array of vertex colors
+     */
+    function randomQuadColors(triangles) {
+        if (triangles % 2)
+            throw new Error("can't generate quad colors for array length not divisible by 2");
+        return [...Array(triangles / 2)].flatMap(() => {
+            const color = [Math.random(), Math.random(), Math.random(), 1.0];
+            return [color, color, color, color, color, color];
+        });
+    }
+    Mesh.randomQuadColors = randomQuadColors;
     /**
      * generate quad, follows counterclockwise winding order
      * @returns array of vertices
@@ -56,7 +70,7 @@ var Mesh;
             return [];
         }
         // 3 verts per tri, two tris per segment
-        let res = [];
+        const res = [];
         const tip = [0.0, 0.5, 0.0, 1.0];
         const base = [0.0, -0.5, 0.0, 1.0];
         // set up first vertex
@@ -65,10 +79,10 @@ var Mesh;
         // iterate over each segment (counterclockwise when looking at the bottom)
         for (let i = 0; i < segments; i++) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
-            let angle = ((i + 1) / segments) * (2 * Math.PI);
+            const angle = ((i + 1) / segments) * (2 * Math.PI);
             // calculate position of next vertex around the cone's base
-            let newX = 0.5 * Math.cos(angle);
-            let newZ = 0.5 * Math.sin(angle);
+            const newX = 0.5 * Math.cos(angle);
+            const newZ = 0.5 * Math.sin(angle);
             // triangle that goes to the tip of the cone
             res.push(tip, [newX, base[1], newZ, 1.0], [oldX, base[1], oldZ, 1.0]);
             // triangle on the base
@@ -86,19 +100,19 @@ var Mesh;
             return [];
         }
         // 3 verts per tri, 4 tris per segment
-        let res = [];
+        const res = [];
         // centers of the top and bottom
         const top = [0.0, 0.5, 0.0, 1.0];
         const bot = [0.0, -0.5, 0.0, 1.0];
         // set up first vertex
-        let oldX = 0.5;
         let oldZ = 0;
+        let oldX = 0.5;
         for (let i = 0; i < segments; i++) {
             // calculate current angle, i + 1 since the calculated vertex is shared with next segment
-            let angle = ((i + 1) / segments) * (2 * Math.PI);
+            const angle = ((i + 1) / segments) * (2 * Math.PI);
             // calculate position of next vertex around the cone's base
-            let newX = 0.5 * Math.cos(angle);
-            let newZ = 0.5 * Math.sin(angle);
+            const newX = 0.5 * Math.cos(angle);
+            const newZ = 0.5 * Math.sin(angle);
             // top triangle
             res.push(top, [newX, top[1], newZ, 1.0], [oldX, top[1], oldZ, 1.0]);
             // the quad
@@ -129,7 +143,7 @@ var Mesh;
         const segmentAngle = (1 / segments) * 360;
         const bandAngle = (1 / bands) * 180;
         // build first segment
-        let segment = [];
+        const segment = [];
         const segmentRot = rotateY(segmentAngle);
         const bandRot = rotateX(bandAngle);
         // rotate into position for first triangle
@@ -140,8 +154,8 @@ var Mesh;
         // 2 less because the triangles on each part of it aren't counted
         for (let i = 0; i < (bands - 2); i++) {
             // calculate new points
-            let new1 = matVecMul(bandRot, old1);
-            let new2 = matVecMul(segmentRot, new1);
+            const new1 = matVecMul(bandRot, old1);
+            const new2 = matVecMul(segmentRot, new1);
             // 1 quad on the segment
             segment.push(...quad(old1, new1, new2, old2));
             old1 = new1;
@@ -150,10 +164,10 @@ var Mesh;
         // bottom triangle
         segment.push(bot, old2, old1);
         // build full sphere
-        let res = [...segment];
+        const res = [...segment];
         for (let i = 1; i < segments; i++) {
             // rotate a copy of the segment to the right place and add it
-            let rot = rotateY(segmentAngle * i);
+            const rot = rotateY(segmentAngle * i);
             res.push(...segment.map(v => matVecMul(rot, v)));
         }
         return res;
@@ -179,7 +193,7 @@ var Mesh;
         const bandAngle = (1 / bands) * 360;
         console.log(`bands: ${bands} band angle: ${bandAngle}`);
         // build first segment
-        let segment = [];
+        const segment = [];
         const segmentRot = rotateY(segmentAngle);
         const bandRot = rotateZ(bandAngle);
         const diamTrans = translate(0.5, 0.0, 0.0);
@@ -187,16 +201,16 @@ var Mesh;
         let currPoint = [minorDiam, 0.0, 0.0, 1.0];
         for (let i = 0; i < bands; i++) {
             // next point on the circle
-            let newPoint = matVecMul(bandRot, currPoint);
+            const newPoint = matVecMul(bandRot, currPoint);
             // translate/rotate each point to it's correct position and make a quad
             segment.push(...quad(matVecMul(diamTrans, currPoint), matVecMul(segmentRot, matVecMul(diamTrans, currPoint)), matVecMul(segmentRot, matVecMul(diamTrans, newPoint)), matVecMul(diamTrans, newPoint)));
             currPoint = newPoint;
         }
         // build full torus
-        let res = [...segment];
+        const res = [...segment];
         for (let i = 1; i < segments; i++) {
             // rotate a copy of the segment to the right place and add it
-            let rot = rotateY(segmentAngle * i);
+            const rot = rotateY(segmentAngle * i);
             res.push(...segment.map(v => matVecMul(rot, v)));
         }
         return res;

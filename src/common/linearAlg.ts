@@ -323,10 +323,10 @@ function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
     }
 
     // length of vector projected to yz plane
-    let d = Math.sqrt(axis[1] * axis[1] + axis[2] * axis[2]);
+    const d = Math.sqrt(axis[1] * axis[1] + axis[2] * axis[2]);
 
     // matrix to rotate about x axis to xz plane
-    let rotX: mat4 = [
+    const rotX: mat4 = [
         [1, 0, 0, 0],
         [0, axis[2] / d, axis[1] / d, 0],
         [0, -axis[1] / d, axis[2] / d, 0],
@@ -334,10 +334,10 @@ function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
     ];
 
     // special case makes inversion easy!
-    let rotXInv = matTrans(rotX);
+    const rotXInv = matTrans(rotX);
 
     // matrix to rotate about y axis to z axis
-    let rotY: mat4 = [
+    const rotY: mat4 = [
         [d, 0, axis[0], 0],
         [0, 1, 0, 0],
         [-axis[0], 0, d, 0],
@@ -345,9 +345,9 @@ function rotateAxis(degree: number, axis: vec4, center?: vec4): mat4 {
     ];
 
     // special case makes inversion easy!
-    let rotYInv = matTrans(rotY);
+    const rotYInv = matTrans(rotY);
 
-    let rotZ = rotateZ(degree);
+    const rotZ = rotateZ(degree);
 
     let result = matMul(rotXInv, matMul(rotYInv, matMul(rotZ, matMul(rotY, rotX))));
 
