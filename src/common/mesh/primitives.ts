@@ -12,6 +12,20 @@ namespace Mesh {
     }
 
     /**
+     * generate colors for quads
+     * @param triangles number of triangles, must be divisible by 2
+     * @returns array of vertex colors
+     */
+    export function randomQuadColors(triangles: number): vec4[] {
+        if (triangles % 2) throw new Error("can't generate quad colors for array length not divisible by 2");
+
+        return [...Array(triangles / 2)].flatMap(() => {
+            let color: vec4 = [Math.random(), Math.random(), Math.random(), 1.0];
+            return [color, color, color, color, color, color];
+        });
+    }
+
+    /**
      * generate quad, follows counterclockwise winding order
      * @returns array of vertices
      */
