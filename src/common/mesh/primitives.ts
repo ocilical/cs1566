@@ -25,6 +25,24 @@ namespace Mesh {
         });
     }
 
+    export function cubeAxisColors(): vec4[] {
+        const posX: vec4 = [1, 0, 0, 1];
+        const posY: vec4 = [0, 1, 0, 1];
+        const posZ: vec4 = [0, 0, 1, 1];
+        const negX: vec4 = [0, 1, 1, 1];
+        const negY: vec4 = [1, 0, 1, 1];
+        const negZ: vec4 = [1, 1, 0, 1];
+
+        return [
+            posY, posY, posY, posY, posY, posY,
+            negY, negY, negY, negY, negY, negY,
+            negX, negX, negX, negX, negX, negX,
+            posX, posX, posX, posX, posX, posX,
+            posZ, posZ, posZ, posZ, posZ, posZ,
+            negZ, negZ, negZ, negZ, negZ, negZ,
+        ];
+    }
+
     /**
      * generate quad, follows counterclockwise winding order
      * @returns array of vertices

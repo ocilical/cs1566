@@ -27,6 +27,23 @@ var Mesh;
         });
     }
     Mesh.randomQuadColors = randomQuadColors;
+    function cubeAxisColors() {
+        const posX = [1, 0, 0, 1];
+        const posY = [0, 1, 0, 1];
+        const posZ = [0, 0, 1, 1];
+        const negX = [0, 1, 1, 1];
+        const negY = [1, 0, 1, 1];
+        const negZ = [1, 1, 0, 1];
+        return [
+            posY, posY, posY, posY, posY, posY,
+            negY, negY, negY, negY, negY, negY,
+            negX, negX, negX, negX, negX, negX,
+            posX, posX, posX, posX, posX, posX,
+            posZ, posZ, posZ, posZ, posZ, posZ,
+            negZ, negZ, negZ, negZ, negZ, negZ,
+        ];
+    }
+    Mesh.cubeAxisColors = cubeAxisColors;
     /**
      * generate quad, follows counterclockwise winding order
      * @returns array of vertices
