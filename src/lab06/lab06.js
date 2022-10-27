@@ -42,7 +42,7 @@ var Lab06;
         if (!gl)
             return -1;
         positions = Mesh.cube();
-        let colors = Mesh.cubeAxisColors();
+        let colors = Mesh.randomColors(positions.length); // Mesh.cubeAxisColors();
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
         if (shaderProgram === -1)
