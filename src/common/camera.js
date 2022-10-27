@@ -29,6 +29,16 @@ var Camera;
         return matMul(rot, trans);
     }
     Camera.lookAt = lookAt;
+    /**
+     * creates an orthographic projection matrix
+     * @param left left < right
+     * @param right right > left
+     * @param bottom bottom < top
+     * @param top top > bottom
+     * @param near near < far
+     * @param far far > near
+     * @returns projection matrix
+     */
     function ortho(left, right, bottom, top, near, far) {
         return [
             [2 / (right - left), 0, 0, 0],
@@ -38,4 +48,23 @@ var Camera;
         ];
     }
     Camera.ortho = ortho;
+    /**
+     * generate perspective projection matrix
+     * @param left left < right
+     * @param right right > left
+     * @param bottom bottom < top
+     * @param top top > bottom
+     * @param near far < near < 0
+     * @param far far < near < 0
+     * @returns projection matrix
+     */
+    function frustum(left, right, bottom, top, near, far) {
+        return [
+            [-(2 * near) / (right - left), 0, 0, 0],
+            [0, -(2 * near) / (top - bottom), 0, 0],
+            [(left + right) / (right - left), (bottom + top) / (top - bottom), (near + far) / (far - near), -1],
+            [0, 0, -(2 * near * far) / (far - near), 0],
+        ];
+    }
+    Camera.frustum = frustum;
 })(Camera || (Camera = {}));
