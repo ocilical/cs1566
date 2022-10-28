@@ -170,4 +170,70 @@ namespace Maze {
 
         return res.join("\n");
     }
+
+    /**
+     * turn a maze into a 3d object, width/columns are on the x axis, height/rows are on the z axis
+     * @param maze maze to make a mesh of
+     * @returns array of verts, size will be a multiple of 36
+     */
+    export function toMesh(maze: MazeCell[][]): vec4[] {
+        const res: vec4[] = [];
+
+        // create and add base, 1 unit wide padding around the edge
+        const baseTrans = composeTrans(translate(-1.5, 0, -1.5), scale(maze[0].length + 2, 0.1, maze.length + 2), translate(0.5, 0, 0.5));
+        res.push(...(Mesh.cube().map(v => matVecMul(baseTrans, v))));
+
+        // do pillars
+        // scale pillar correctly and move it up a bit
+        const pillarShape = composeTrans(translate(0, 0.5, 0), scale(0.1, 1, 0.1));
+        for (let row = 0; row < maze.length + 1; row++) {
+            for (let col = 0; col < maze[0].length + 1; col++) {
+                const pillarTrans = composeTrans(translate(col - 0.5, 0, row - 0.5), pillarShape);
+                res.push(...(Mesh.cube().map(v => matVecMul(pillarTrans, v))));
+            }
+        }
+
+        // walls
+        const zWallShape = composeTrans(translate(0, 0.45, 0), scale(0.05, 0.9, 1));
+        const zWallleft = translate(-0.5, 0, 0);
+        const zWallright = translate(0.5, 0, 0);
+
+        const xWallShape = composeTrans(translate(0, 0.45, 0), scale(1, 0.9, 0.05));
+        const xWallup = translate(0, 0, -0.5);
+        const xWalldown = translate(0, 0, 0.5);
+
+        // do first two walls, just like tostring!
+        for (let row = 0; row < maze.length; row++) {
+            if (maze[row][0].left) {
+                const wallTrans = composeTrans(zWallleft, translate(0, 0, row), zWallShape);
+                res.push(...(Mesh.cube().map(v => matVecMul(wallTrans, v))));
+            }
+        }
+
+        for (let col = 0; col < maze[0].length; col++) {
+            if (maze[0][col].up) {
+                const wallTrans = composeTrans(xWallup, translate(col, 0, 0), xWallShape);
+                res.push(...(Mesh.cube().map(v => matVecMul(wallTrans, v))));
+            }
+        }
+
+        // do the rest of the maze
+        for (let row = 0; row < maze.length; row++) {
+            for (let col = 0; col < maze[0].length; col++) {
+                // right wall
+                if (maze[row][col].right) {
+                    const wallTrans = composeTrans(zWallright, translate(col, 0, row), zWallShape);
+                    res.push(...(Mesh.cube().map(v => matVecMul(wallTrans, v))));
+                }
+
+                // down wall
+                if (maze[row][col].down) {
+                    const wallTrans = composeTrans(xWalldown, translate(col, 0, row), xWallShape);
+                    res.push(...(Mesh.cube().map(v => matVecMul(wallTrans, v))));
+                }
+            }
+        }
+
+        return res;
+    }
 }
