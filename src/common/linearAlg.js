@@ -247,6 +247,14 @@ function vecLerp(a, b, t) {
     ];
 }
 /**
+ * compose tranformation matrices, right to left
+ * @param args transformations to be composed, applied starting at the right
+ * @returns composed transformation matrix
+ */
+function composeTrans(...args) {
+    return args.reduceRight((acc, curr) => matMul(curr, acc), [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+}
+/**
  * returns a transformation that translates by x, y, and z along respective axes
  */
 function translate(x, y, z) {

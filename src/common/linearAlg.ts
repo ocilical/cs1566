@@ -283,6 +283,15 @@ function vecLerp(a: vec4, b: vec4, t: number): vec4 {
 }
 
 /**
+ * compose tranformation matrices, right to left
+ * @param args transformations to be composed, applied starting at the right
+ * @returns composed transformation matrix
+ */
+function composeTrans(...args: mat4[]): mat4 {
+    return args.reduceRight((acc, curr) => matMul(curr, acc), [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]);
+}
+
+/**
  * returns a transformation that translates by x, y, and z along respective axes
  */
 function translate(x: number, y: number, z: number): mat4 {
