@@ -260,8 +260,10 @@ namespace Maze {
             return { up: true, down: true, left: true, right: false };
         } else if (row === (maze.length - 1) && col == maze[0].length) {
             return { up: true, down: true, left: false, right: true };
+        } else if (row < 0 || row > maze.length || col < 0 || col > maze[0].length) {
+            return null;
         }
-        return maze[row][col] ? maze[row][col] : null;
+        return maze[row][col];
 
     }
 

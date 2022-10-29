@@ -224,7 +224,10 @@ var Maze;
         else if (row === (maze.length - 1) && col == maze[0].length) {
             return { up: true, down: true, left: false, right: true };
         }
-        return maze[row][col] ? maze[row][col] : null;
+        else if (row < 0 || row > maze.length || col < 0 || col > maze[0].length) {
+            return null;
+        }
+        return maze[row][col];
     }
     /**
      * a messy function to generate a path through the maze

@@ -18,6 +18,7 @@ namespace Project2 {
     const mazeWidth = 8;
     const mazeHeight = 8;
     export const maze = Maze.genMaze(mazeWidth, mazeHeight);
+    console.log(Maze.toString(maze));
 
     type PlayerState =
         | "idle"
@@ -321,12 +322,9 @@ namespace Project2 {
         if (currState !== "idle") {
             return;
         }
-        solving = true;
         solvePath = Maze.solveMaze(maze, currPos[2], currPos[0]);
         currPathIndex = 0;
-        if (!solvePath) {
-            solving = false;
-        }
+        solving = solvePath !== null;
     }
 
     // This function will be called when a keyboard is pressed.

@@ -19,6 +19,7 @@ var Project2;
     const mazeWidth = 8;
     const mazeHeight = 8;
     Project2.maze = Maze.genMaze(mazeWidth, mazeHeight);
+    console.log(Maze.toString(Project2.maze));
     let currState = "idle";
     // vectors for each direction
     const dirs = {
@@ -276,12 +277,9 @@ var Project2;
         if (currState !== "idle") {
             return;
         }
-        solving = true;
         solvePath = Maze.solveMaze(Project2.maze, currPos[2], currPos[0]);
         currPathIndex = 0;
-        if (!solvePath) {
-            solving = false;
-        }
+        solving = solvePath !== null;
     }
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {
