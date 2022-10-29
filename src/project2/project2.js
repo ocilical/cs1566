@@ -273,6 +273,9 @@ var Project2;
         }
     }
     function solveMaze() {
+        if (currState !== "idle") {
+            return;
+        }
         solving = true;
         solvePath = Maze.solveMaze(Project2.maze, currPos[2], currPos[0]);
         currPathIndex = 0;

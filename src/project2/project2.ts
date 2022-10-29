@@ -318,6 +318,9 @@ namespace Project2 {
     }
 
     function solveMaze() {
+        if (currState !== "idle") {
+            return;
+        }
         solving = true;
         solvePath = Maze.solveMaze(maze, currPos[2], currPos[0]);
         currPathIndex = 0;
