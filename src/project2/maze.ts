@@ -171,6 +171,10 @@ namespace Maze {
         return res.join("\n");
     }
 
+    export function groundColor(): vec4[] {
+        return [...Array(36)].map(() => [0.5, 0.5, 0.5, 1.0]);
+    }
+
     /**
      * turn a maze into a 3d object, width/columns are on the x axis, height/rows are on the z axis
      * @param maze maze to make a mesh of

@@ -148,6 +148,10 @@ var Maze;
         return res.join("\n");
     }
     Maze.toString = toString;
+    function groundColor() {
+        return [...Array(36)].map(() => [0.5, 0.5, 0.5, 1.0]);
+    }
+    Maze.groundColor = groundColor;
     /**
      * turn a maze into a 3d object, width/columns are on the x axis, height/rows are on the z axis
      * @param maze maze to make a mesh of
