@@ -136,7 +136,6 @@ var Project2;
         gl.drawArrays(gl.TRIANGLES, 0, positions.length);
     }
     function idle() {
-        //console.log(currState);
         switch (currState) {
             case "idle":
                 break;
@@ -202,7 +201,6 @@ var Project2;
                 throw new Error(`${currState} is not a defined state, something has gone horribly wrong`);
         }
         animTime += 1;
-        console.log(`currPos: ${currPos} currlook: ${vecAdd(currPos, currDir)} currUp: ${currUp}`);
         model_view = Camera.lookAt(currPos, vecAdd(currPos, currDir), currUp);
         // Draw
         display();

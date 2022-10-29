@@ -172,7 +172,6 @@ namespace Project2 {
     }
 
     function idle() {
-        //console.log(currState);
         switch (currState) {
             case "idle":
                 break;
@@ -240,7 +239,6 @@ namespace Project2 {
 
         animTime += 1;
 
-        console.log(`currPos: ${currPos} currlook: ${vecAdd(currPos, currDir)} currUp: ${currUp}`);
         model_view = Camera.lookAt(currPos, vecAdd(currPos, currDir), currUp);
         // Draw
         display();
