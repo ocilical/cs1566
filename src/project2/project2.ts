@@ -73,7 +73,6 @@ namespace Project2 {
     let currDir: vec4 = dirs[currDirName];
 
     const idleUp: vec4 = [0, 1, 0, 0];
-    const mapUp: vec4 = [1, 0, 0, 0];
     let currUp = idleUp;
 
     let model_view: mat4 = Camera.lookAt(currPos, vecAdd(currPos, currDir), currUp);
@@ -213,13 +212,13 @@ namespace Project2 {
                 if (animTime >= animStart + animLength) {
                     currPos = mapViewPos;
                     currDir = mapViewDir;
-                    currUp = mapUp;
+                    currUp = dirs[currDirName];
                     currState = "map";
                     break;
                 }
                 currPos = vecLerp(savedPos, mapViewPos, (animTime - animStart) / animLength);
                 currDir = vecLerp(dirs[currDirName], mapViewDir, (animTime - animStart) / animLength);
-                currUp = vecLerp(idleUp, mapUp, (animTime - animStart) / animLength);
+                currUp = vecLerp(idleUp, dirs[currDirName], (animTime - animStart) / animLength);
                 break;
             case "flydown":
                 if (animTime >= animStart + animLength) {
@@ -231,7 +230,7 @@ namespace Project2 {
                 }
                 currPos = vecLerp(mapViewPos, savedPos, (animTime - animStart) / animLength);
                 currDir = vecLerp(mapViewDir, dirs[currDirName], (animTime - animStart) / animLength);
-                currUp = vecLerp(mapUp, idleUp, (animTime - animStart) / animLength);
+                currUp = vecLerp(dirs[currDirName], idleUp, (animTime - animStart) / animLength);
                 break;
             case "map":
                 break;
