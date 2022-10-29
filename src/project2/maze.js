@@ -209,4 +209,102 @@ var Maze;
         return res;
     }
     Maze.toMesh = toMesh;
+    /**
+     * returns a cell from a maze accounting for the entrance and exit
+     * @param maze maze to get a cell from
+     * @param row position to get a cell from
+     * @param col position to get a cell from
+     * @returns cell
+     */
+    function getMazeCell(maze, row, col) {
+        // add entrance/exit
+        if (row === 0 && col === -1) {
+            return { up: true, down: true, left: true, right: false };
+        }
+        else if (row === (maze.length - 1) && col == maze[0].length) {
+            return { up: true, down: true, left: false, right: true };
+        }
+        return maze[row][col] ? maze[row][col] : null;
+    }
+    /**
+     * a messy function to generate a path through the maze
+     * @param maze maze to solve
+     * @param row position to start from
+     * @param col position to start from
+     * @returns list of directions to take
+     */
+    function solveMaze(maze, row, col) {
+        // make sure the player is in the maze and it hasn't already been solved
+        if (!getMazeCell(maze, row, col) || (row === maze.length - 1 && col == maze[0].length)) {
+            return null;
+        }
+        // do a breadth first search of the maze keeping track of distance and where we came from
+        // arrays are two columns wider to account for entrance/exit
+        let queue = [];
+        let visited = [...Array(maze.length)].map(() => [...Array(maze.length + 2)].map(() => false));
+        let dist = [...Array(maze.length)].map(() => [...Array(maze.length + 2)].map(() => Infinity));
+        let via = [...Array(maze.length)].map(() => [...Array(maze.length + 2)].map(() => null));
+        visited[row][col + 1] = true;
+        dist[row][col + 1] = 0;
+        queue.push([row, col]);
+        while (queue.length > 0) {
+            let [currRow, currCol] = queue.shift(); // won't be undefined because queue length must be > 0
+            let currCell = getMazeCell(maze, currRow, currCol); // won't be null because there's no way out of the maze
+            if (currRow == maze.length - 1 && currCol == maze[0].length) {
+                break;
+            }
+            // check every direction
+            if (!currCell.up && !visited[currRow - 1][currCol + 1]) {
+                visited[currRow - 1][currCol + 1] = true;
+                dist[currRow - 1][currCol + 1] = dist[currRow][currCol + 1] + 1;
+                via[currRow - 1][currCol + 1] = [currRow, currCol];
+                queue.push([currRow - 1, currCol]);
+            }
+            if (!currCell.down && !visited[currRow + 1][currCol + 1]) {
+                visited[currRow + 1][currCol + 1] = true;
+                dist[currRow + 1][currCol + 1] = dist[currRow][currCol + 1] + 1;
+                via[currRow + 1][currCol + 1] = [currRow, currCol];
+                queue.push([currRow + 1, currCol]);
+            }
+            if (!currCell.left && !visited[currRow][currCol]) {
+                visited[currRow][currCol] = true;
+                dist[currRow][currCol] = dist[currRow][currCol + 1] + 1;
+                via[currRow][currCol] = [currRow, currCol];
+                queue.push([currRow, currCol - 1]);
+            }
+            if (!currCell.right && !visited[currRow][currCol + 2]) {
+                visited[currRow][currCol + 2] = true;
+                dist[currRow][currCol + 2] = dist[currRow][currCol + 1] + 1;
+                via[currRow][currCol + 2] = [currRow, currCol];
+                queue.push([currRow, currCol + 1]);
+            }
+        }
+        // start at maze exit
+        let currPos = [maze.length - 1, maze[0].length];
+        let path = [];
+        while (via[currPos[0]][currPos[1] + 1]) {
+            path.push(via[currPos[0]][currPos[1] + 1]);
+            currPos = via[currPos[0]][currPos[1] + 1];
+        }
+        // turn path into directions
+        let directions = [];
+        for (let i = path.length - 1; i > 0; i--) {
+            if (path[i][0] < path[i - 1][0]) {
+                directions.push("down");
+            }
+            else if (path[i][0] > path[i - 1][0]) {
+                directions.push("up");
+            }
+            else if (path[i][1] < path[i - 1][1]) {
+                directions.push("right");
+            }
+            else {
+                directions.push("left");
+            }
+        }
+        // final step to get out of the maze
+        directions.push("right");
+        return directions;
+    }
+    Maze.solveMaze = solveMaze;
 })(Maze || (Maze = {}));

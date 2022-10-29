@@ -41,6 +41,8 @@ var Project2;
     };
     // is automatic solving happening right now?
     let solving = false;
+    let solvePath;
+    let currPathIndex = 0;
     // for tracking the current animation
     let animTime = 0;
     const animLength = 15;
@@ -138,6 +140,21 @@ var Project2;
     function idle() {
         switch (currState) {
             case "idle":
+                if (!solving)
+                    break;
+                if (currPathIndex >= solvePath.length) {
+                    solving = false;
+                }
+                else if (solvePath[currPathIndex] === currDirName) {
+                    currPathIndex++;
+                    walk();
+                }
+                else if (solvePath[currPathIndex] === leftDirs[currDirName]) {
+                    turnLeft();
+                }
+                else {
+                    turnRight();
+                }
                 break;
             case "walk":
                 if (animTime >= animStart + animLength) {
@@ -256,7 +273,12 @@ var Project2;
         }
     }
     function solveMaze() {
-        //solving = true;
+        solving = true;
+        solvePath = Maze.solveMaze(Project2.maze, currPos[2], currPos[0]);
+        currPathIndex = 0;
+        if (!solvePath) {
+            solving = false;
+        }
     }
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event) {

@@ -33,21 +33,21 @@ namespace Project2 {
 
     // vectors for each direction
 
-    const dirs: { [key: string]: vec4; } = {
+    const dirs: { [key in Maze.MazeDir]: vec4; } = {
         up: [0, 0, -1, 0],
         down: [0, 0, 1, 0],
         left: [-1, 0, 0, 0],
         right: [1, 0, 0, 0],
     };
 
-    const leftDirs: { [key: string]: string; } = {
+    const leftDirs: { [key in Maze.MazeDir]: Maze.MazeDir; } = {
         up: "left",
         left: "down",
         down: "right",
         right: "up",
     };
 
-    const rightDirs: { [key: string]: string; } = {
+    const rightDirs: { [key in Maze.MazeDir]: Maze.MazeDir; } = {
         up: "right",
         right: "down",
         down: "left",
@@ -56,6 +56,8 @@ namespace Project2 {
 
     // is automatic solving happening right now?
     let solving = false;
+    let solvePath: Maze.MazeDir[] | null;
+    let currPathIndex = 0;
 
     // for tracking the current animation
     let animTime = 0;
@@ -69,7 +71,7 @@ namespace Project2 {
 
     let currPos: vec4 = [-1, 0.5, 0, 1];
     let savedPos: vec4 = [0, 0, 0, 1];
-    let currDirName: string = "right";
+    let currDirName: Maze.MazeDir = "right";
     let currDir: vec4 = dirs[currDirName];
 
     const idleUp: vec4 = [0, 1, 0, 0];
@@ -174,6 +176,18 @@ namespace Project2 {
     function idle() {
         switch (currState) {
             case "idle":
+                if (!solving) break;
+
+                if (currPathIndex >= solvePath!.length) {
+                    solving = false;
+                } else if (solvePath![currPathIndex] === currDirName) {
+                    currPathIndex++;
+                    walk();
+                } else if (solvePath![currPathIndex] === leftDirs[currDirName]) {
+                    turnLeft();
+                } else {
+                    turnRight();
+                }
                 break;
             case "walk":
                 if (animTime >= animStart + animLength) {
@@ -304,7 +318,12 @@ namespace Project2 {
     }
 
     function solveMaze() {
-        //solving = true;
+        solving = true;
+        solvePath = Maze.solveMaze(maze, currPos[2], currPos[0]);
+        currPathIndex = 0;
+        if (!solvePath) {
+            solving = false;
+        }
     }
 
     // This function will be called when a keyboard is pressed.
