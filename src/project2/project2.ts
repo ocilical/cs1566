@@ -370,7 +370,6 @@ namespace Project2 {
         // Comment out those that are not used.
         document.addEventListener("keydown", keyDownCallback);
 
-
         display();
 
         requestAnimationFrame(idle);
