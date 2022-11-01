@@ -334,21 +334,26 @@ namespace Project2 {
         }
         switch (event.key) {
             case "w":
+            case "W":
                 walk();
                 break;
             case "a":
+            case "A":
                 turnLeft();
                 break;
             case "s":
+            case "S":
                 walkback();
                 break;
             case "d":
+            case "D":
                 turnRight();
                 break;
             case " ":
                 mapToggle();
                 break;
             case "c":
+            case "C":
                 solveMaze();
                 break;
         }
