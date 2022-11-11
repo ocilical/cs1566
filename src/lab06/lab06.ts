@@ -47,7 +47,7 @@ namespace Lab06 {
         if (!gl) return -1;
         positions = Mesh.cube();
 
-        let colors: vec4[] = Mesh.randomColors(positions.length); // Mesh.cubeAxisColors();
+        let colors: vec4[] = Mesh.randomColors(positions.length / 3); // Mesh.cubeAxisColors();
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");

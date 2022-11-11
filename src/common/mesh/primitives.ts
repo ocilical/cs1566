@@ -43,6 +43,16 @@ namespace Mesh {
         ];
     }
 
+    export function solidColor(triangles: number, color: vec4): vec4[] {
+        return [...Array(triangles)].flatMap(() => [color, color, color]);
+    }
+
+    export function twoColorSphere(triangles: number, color1: vec4, color2: vec4): vec4[] {
+        let res: vec4[] = [...Array(triangles / 4)].flatMap(() => [color1, color1, color1]);
+        res = res.concat([...Array(triangles / 2)].flatMap(() => [color2, color2, color2]));
+        return res.concat([...Array(triangles / 4)].flatMap(() => [color1, color1, color1]));
+    }
+
     /**
      * generate quad, follows counterclockwise winding order
      * @returns array of vertices

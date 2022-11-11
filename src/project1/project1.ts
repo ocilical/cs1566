@@ -84,7 +84,7 @@ namespace Project1 {
         currOffset = objOffsets.cube;
         currSize = objSizes.cube;
 
-        let colors: vec4[] = Mesh.randomColors(positions.length);
+        let colors: vec4[] = Mesh.randomColors(positions.length / 3);
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");

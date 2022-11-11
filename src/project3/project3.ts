@@ -1,22 +1,37 @@
-namespace Spinner {
+namespace Project3 {
     // These variables must be global variables.
     // Some callback functions may need to access them.
     let gl: WebGLRenderingContext | null;
     let canvas: HTMLCanvasElement | null;
+
     let ctm_location: WebGLUniformLocation | null;
-    let identity: mat4 = [
+    let model_view_location: WebGLUniformLocation | null;
+    let projection_location: WebGLUniformLocation | null;
+
+    export const identity: mat4 = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0],
+        [0.0, 0.0, 0.0, 1.0]
     ];
-    const cone_base_ctm: mat4 = identity;//rotateZ(40);
-    let cone_ctm = identity;
-    let isAnimating = true;
-    let cone_degree = 0.0;
-    const segments = 128;
-    let positions: vec4[];
 
+    const viewscale = 0.13;
+    const projection: mat4 = Camera.frustum(-viewscale, viewscale, -viewscale, viewscale, -0.1, -100);
+    let model_view: mat4 = Camera.lookAt([6, 6, 6, 1], [0, 0, 0, 1], [0, 1, 0, 0]);
+
+    export interface Object {
+        offset: number;
+        verts: number;
+        ctm: mat4;
+    }
+    let objects: { [key: string]: Object; } = {};
+
+    export const sphereBands = 16;
+    export const sphereSegments = 32;
+
+    let lightbulbPos: vec4 = [0.0, 5.0, 0.0, 1.0];
+
+    let isAnimating = true;
 
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
@@ -38,9 +53,10 @@ namespace Spinner {
     function init() {
         if (!gl) return -1;
 
-        // generate cone and colors for it
-        positions = Mesh.cube();//Mesh.torus(64, 16);//Mesh.cylinder(segments);
-        let colors: vec4[] = Mesh.randomColors(positions.length / 3);
+        let positions: vec4[];
+        let colors: vec4[];
+
+        [positions, colors, objects] = Project3.initScene();
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -84,6 +100,17 @@ namespace Spinner {
             return -1;
         }
 
+        model_view_location = gl.getUniformLocation(shaderProgram, "model_view");
+        if (model_view_location === null) {
+            alert("Unable to locate model_view");
+            return -1;
+        }
+        projection_location = gl.getUniformLocation(shaderProgram, "projection");
+        if (projection_location === null) {
+            alert("Unable to locate projection");
+            return -1;
+        }
+
         return 0;
     }
 
@@ -94,57 +121,28 @@ namespace Spinner {
         }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        // Set the ctm of the middle triangle
-        gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(cone_ctm));
-        // Draw the middle triangle
-        gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+        gl.uniformMatrix4fv(model_view_location, false, to1DF32Array(model_view));
+        gl.uniformMatrix4fv(projection_location, false, to1DF32Array(projection));
+
+        for (const key in objects) {
+            const obj = objects[key];
+            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(obj.ctm));
+            gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
+        }
+
     }
 
     function idle() {
-
-        // Calculate ctm for the top-right triangle
-        cone_degree += 1;
-        if (cone_degree > 360.0)
-            cone_degree = 0.0;
-
-        cone_ctm = matMul(rotateAxis(cone_degree, [1.0, 1.0, 1.0, 0.0]), cone_base_ctm);
-
         // Draw
         display();
 
-        if (isAnimating === true)
+        if (isAnimating)
             requestAnimationFrame(idle);
     }
 
-    // This function will be called when a mouse button is down inside the canvas.
-    function mouseDownCallback(event: MouseEvent) {
-        console.log("mouseDownCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
-    }
-
-    // This function will be called when a mouse button is up inside the canvas
-    function mouseUpCallback(event: MouseEvent) {
-        console.log("mouseUpCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
-    }
-
-    // This function will be called when a mouse pointer moves over the canvas.
-    function mouseMoveCallback(event: MouseEvent) {
-        console.log("mouseMoveCallback(): " +
-            "event.button = " + event.button +
-            ", x = " + (event.clientX - canvas!.offsetLeft) +
-            ", y = " + (event.clientY - canvas!.offsetTop));
-    }
 
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event: KeyboardEvent) {
-        console.log("keyDownCallback(): " +
-            "event.key = " + event.key);
-
         if (event.key === " ") {
             isAnimating = !isAnimating;
             if (isAnimating) requestAnimationFrame(idle);
@@ -158,15 +156,9 @@ namespace Spinner {
         if (init() === -1)
             return -1;
 
-        // Register callback functions
-        // Comment out those that are not used.
-        canvas.addEventListener("mousedown", mouseDownCallback);
-        canvas.addEventListener("mouseup", mouseUpCallback);
-        canvas.addEventListener("mousemove", mouseMoveCallback);
         document.addEventListener("keydown", keyDownCallback);
 
-
-        display();
+        //display();
 
         if (isAnimating)
             requestAnimationFrame(idle);
