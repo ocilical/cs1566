@@ -186,38 +186,38 @@ namespace Project3 {
         positions.push(...tempPos);
         colors.push(...Mesh.cubeAxisColors());
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(1.0, 0.5, 0.0), v));
+        tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.innerSphere = {
             offset: positions.length,
             verts: tempPos.length,
-            ctm: identity,
+            ctm: translate(1.0, 0.5, 0.0),
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(2.0, 0.5, 0.0), v));
+        tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.midInnerSphere = {
             offset: positions.length,
             verts: tempPos.length,
-            ctm: identity,
+            ctm: translate(2.0, 0.5, 0.0),
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(3.0, 0.5, 0.0), v));
+        tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.midOuterSphere = {
             offset: positions.length,
             verts: tempPos.length,
-            ctm: identity,
+            ctm: translate(3.0, 0.5, 0.0),
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(4.0, 0.5, 0.0), v));
+        tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.outerSphere = {
             offset: positions.length,
             verts: tempPos.length,
-            ctm: identity,
+            ctm: translate(4.0, 0.5, 0.0),
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));

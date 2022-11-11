@@ -38,6 +38,17 @@ namespace Project3 {
     let isAnimating = true;
     let animTime = 0;
 
+    const rotPerMin = 30;
+    const framesPerMin = 60 * 60;
+    const rotateTime = framesPerMin / rotPerMin;
+
+    let sphereRot = {
+        innerSphere: identity,
+        midInnerSphere: identity,
+        midOuterSphere: identity,
+        outerSphere: identity,
+    };
+
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -141,16 +152,61 @@ namespace Project3 {
         // Draw
         display();
 
+
+        let angle = -2 * Math.PI * ((animTime % (rotateTime * 8)) / (rotateTime * 8));
+
+        // waitfac is just hand tweaked until it looks good
+        let pos: vec4 = [Math.cos(angle * 8), 0.5, Math.sin(angle * 8), 0];
+        sphereRot.innerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.innerSphere);
+        objects.innerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.innerSphere);
+
+        let waitFac = 0.41;
+        objects.innerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8) - waitFac), 0);
+        objects.innerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + Math.PI / 2) - waitFac), 0);
+        objects.innerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + Math.PI) - waitFac), 0);
+        objects.innerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + 3 * Math.PI / 2) - waitFac), 0);
+
+
+        pos = [2 * Math.cos(angle * 4), 0.5, 2 * Math.sin(angle * 4), 0];
+        sphereRot.midInnerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midInnerSphere);
+        objects.midInnerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midInnerSphere);
+
+        waitFac = 0.44;
+        objects.midInnerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4) - waitFac), 0);
+        objects.midInnerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + Math.PI / 2) - waitFac), 0);
+        objects.midInnerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + Math.PI) - waitFac), 0);
+        objects.midInnerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + 3 * Math.PI / 2) - waitFac), 0);
+
+
+        pos = [3 * Math.cos(angle * 2), 0.5, 3 * Math.sin(angle * 2), 0];
+        sphereRot.midOuterSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midOuterSphere);
+        objects.midOuterSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midOuterSphere);
+
+        waitFac = 0.46;
+        objects.midOuterFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2) - waitFac), 0);
+        objects.midOuterRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + Math.PI / 2) - waitFac), 0);
+        objects.midOuterBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + Math.PI) - waitFac), 0);
+        objects.midOuterLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + 3 * Math.PI / 2) - waitFac), 0);
+
+
+        pos = [4 * Math.cos(angle), 0.5, 4 * Math.sin(angle), 0];
+        sphereRot.outerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.outerSphere);
+        objects.outerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.outerSphere);
+
+        waitFac = 0.48;
+        objects.outerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle) - waitFac), 0);
+        objects.outerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + Math.PI / 2) - waitFac), 0);
+        objects.outerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + Math.PI) - waitFac), 0);
+        objects.outerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + 3 * Math.PI / 2) - waitFac), 0);
+
+        objects.lightbulb.ctm = translate(lightbulbPos[0], lightbulbPos[1], lightbulbPos[2]);
+
         let viewPos: vec4 = [
             viewRadius * Math.sin(degToRad(viewInclination)) * Math.cos(degToRad(viewAzimuth)),
             viewRadius * Math.cos(degToRad(viewInclination)),
             viewRadius * Math.sin(degToRad(viewInclination)) * Math.sin(degToRad(viewAzimuth)),
             1.0,
         ];
-
-
-        objects.lightbulb.ctm = translate(lightbulbPos[0], lightbulbPos[1], lightbulbPos[2]);
-
         model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
 
         if (isAnimating)
