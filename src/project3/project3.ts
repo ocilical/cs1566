@@ -149,9 +149,6 @@ namespace Project3 {
     }
 
     function idle() {
-        // Draw
-        display();
-
         let angle = -2 * Math.PI * ((animTime % (rotateTime * 8)) / (rotateTime * 8));
 
         // waitfac is just hand tweaked until it looks good
@@ -207,6 +204,9 @@ namespace Project3 {
             1.0,
         ];
         model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
+
+        // Draw
+        display();
 
         if (isAnimating)
             animTime++;
