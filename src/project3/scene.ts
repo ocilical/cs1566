@@ -222,11 +222,11 @@ namespace Project3 {
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(matMul(translate(0.0, 5.0, 0.0), scale(0.4, 0.4, 0.4)), v));
+        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(scale(0.4, 0.4, 0.4), v));
         objects.lightbulb = {
             offset: positions.length,
             verts: tempPos.length,
-            ctm: identity,
+            ctm: translate(0.0, 5.0, 0.0),
         };
         positions.push(...tempPos);
         colors.push(...Mesh.solidColor(tempPos.length / 3, [1.0, 1.0, 1.0, 1.0]));

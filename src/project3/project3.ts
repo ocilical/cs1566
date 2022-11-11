@@ -148,6 +148,9 @@ namespace Project3 {
             1.0,
         ];
 
+
+        objects.lightbulb.ctm = translate(lightbulbPos[0], lightbulbPos[1], lightbulbPos[2]);
+
         model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
 
         if (isAnimating)
@@ -187,6 +190,31 @@ namespace Project3 {
             case "Q":
                 viewRadius = Math.min(100, viewRadius + 0.5);
                 break;
+            case "i":
+            case "I":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0, -0.1, 0]);
+                break;
+            case "k":
+            case "K":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0, 0.1, 0]);
+                break;
+            case "j":
+            case "J":
+                lightbulbPos = vecAdd(lightbulbPos, [-0.1, 0, 0, 0]);
+                break;
+            case "l":
+            case "L":
+                lightbulbPos = vecAdd(lightbulbPos, [0.1, 0, 0, 0]);
+                break;
+            case "o":
+            case "O":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0.1, 0, 0]);
+                break;
+            case "u":
+            case "U ":
+                lightbulbPos = vecAdd(lightbulbPos, [0, -0.1, 0, 0]);
+                break;
+
         }
     }
 
