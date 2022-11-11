@@ -14,6 +14,13 @@ function to1DF32Array(v: vec4[]): Float32Array {
 }
 
 /**
+ * turn degrees into radians
+ */
+function degToRad(degrees: number): number {
+    return degrees * Math.PI / 180;
+}
+
+/**
  * print a vector
  */
 function vecPrint(v: vec4): void {

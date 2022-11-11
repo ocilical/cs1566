@@ -15,9 +15,13 @@ namespace Project3 {
         [0.0, 0.0, 0.0, 1.0]
     ];
 
-    const viewscale = 0.13;
+    const viewscale = 0.05;
     const projection: mat4 = Camera.frustum(-viewscale, viewscale, -viewscale, viewscale, -0.1, -100);
     let model_view: mat4 = Camera.lookAt([6, 6, 6, 1], [0, 0, 0, 1], [0, 1, 0, 0]);
+
+    let viewRadius: number = 10;
+    let viewInclination: number = 44;
+    let viewAzimuth: number = 44;
 
     export interface Object {
         offset: number;
@@ -32,6 +36,7 @@ namespace Project3 {
     let lightbulbPos: vec4 = [0.0, 5.0, 0.0, 1.0];
 
     let isAnimating = true;
+    let animTime = 0;
 
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
@@ -136,16 +141,52 @@ namespace Project3 {
         // Draw
         display();
 
+        let viewPos: vec4 = [
+            viewRadius * Math.sin(degToRad(viewInclination)) * Math.cos(degToRad(viewAzimuth)),
+            viewRadius * Math.cos(degToRad(viewInclination)),
+            viewRadius * Math.sin(degToRad(viewInclination)) * Math.sin(degToRad(viewAzimuth)),
+            1.0,
+        ];
+
+        model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
+
         if (isAnimating)
-            requestAnimationFrame(idle);
+            animTime++;
+
+        requestAnimationFrame(idle);
     }
 
 
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event: KeyboardEvent) {
-        if (event.key === " ") {
-            isAnimating = !isAnimating;
-            if (isAnimating) requestAnimationFrame(idle);
+        switch (event.key) {
+            case " ":
+                isAnimating = !isAnimating;
+                break;
+            case "w":
+            case "W":
+                viewInclination = Math.max(1, viewInclination - 3);
+                break;
+            case "s":
+            case "S":
+                viewInclination = Math.min(179, viewInclination + 3);
+                break;
+            case "a":
+            case "A":
+                viewAzimuth += 3;
+                break;
+            case "d":
+            case "D":
+                viewAzimuth -= 3;
+                break;
+            case "e":
+            case "E":
+                viewRadius = Math.max(1, viewRadius - 0.5);
+                break;
+            case "q":
+            case "Q":
+                viewRadius = Math.min(100, viewRadius + 0.5);
+                break;
         }
     }
 
@@ -160,7 +201,6 @@ namespace Project3 {
 
         //display();
 
-        if (isAnimating)
-            requestAnimationFrame(idle);
+        requestAnimationFrame(idle);
     }
 }

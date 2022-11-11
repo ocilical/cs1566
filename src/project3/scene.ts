@@ -193,7 +193,7 @@ namespace Project3 {
             ctm: identity,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.584, 0.451, 0.871, 1.0], [0.847, 0.506, 0.89, 1.0]));
+        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(2.0, 0.5, 0.0), v));
         objects.midInnerSphere = {
@@ -202,7 +202,7 @@ namespace Project3 {
             ctm: identity,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.584, 0.451, 0.871, 1.0], [0.847, 0.506, 0.89, 1.0]));
+        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(3.0, 0.5, 0.0), v));
         objects.midOuterSphere = {
@@ -211,7 +211,7 @@ namespace Project3 {
             ctm: identity,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.584, 0.451, 0.871, 1.0], [0.847, 0.506, 0.89, 1.0]));
+        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(translate(4.0, 0.5, 0.0), v));
         objects.outerSphere = {
@@ -220,7 +220,7 @@ namespace Project3 {
             ctm: identity,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.584, 0.451, 0.871, 1.0], [0.847, 0.506, 0.89, 1.0]));
+        colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(matMul(translate(0.0, 5.0, 0.0), scale(0.4, 0.4, 0.4)), v));
         objects.lightbulb = {
