@@ -227,19 +227,19 @@ namespace Project3 {
                 break;
             case "w":
             case "W":
-                viewInclination = Math.max(1, viewInclination - 3);
+                viewInclination = Math.max(1, viewInclination - 2);
                 break;
             case "s":
             case "S":
-                viewInclination = Math.min(179, viewInclination + 3);
+                viewInclination = Math.min(179, viewInclination + 2);
                 break;
             case "a":
             case "A":
-                viewAzimuth += 3;
+                viewAzimuth += 2;
                 break;
             case "d":
             case "D":
-                viewAzimuth -= 3;
+                viewAzimuth -= 2;
                 break;
             case "e":
             case "E":
