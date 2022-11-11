@@ -152,7 +152,6 @@ namespace Project3 {
         // Draw
         display();
 
-
         let angle = -2 * Math.PI * ((animTime % (rotateTime * 8)) / (rotateTime * 8));
 
         // waitfac is just hand tweaked until it looks good
