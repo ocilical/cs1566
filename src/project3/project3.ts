@@ -153,7 +153,7 @@ namespace Project3 {
 
         // waitfac is just hand tweaked until it looks good
         let pos: vec4 = [Math.cos(angle * 8), 0.5, Math.sin(angle * 8), 0];
-        sphereRot.innerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.innerSphere);
+        sphereRot.innerSphere = matMul(!isAnimating ? identity : rotateAxis(-1 / rotateTime * 360, pos), sphereRot.innerSphere);
         objects.innerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.innerSphere);
 
         let waitFac = 0.41;
@@ -164,7 +164,7 @@ namespace Project3 {
 
 
         pos = [2 * Math.cos(angle * 4), 0.5, 2 * Math.sin(angle * 4), 0];
-        sphereRot.midInnerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midInnerSphere);
+        sphereRot.midInnerSphere = matMul(!isAnimating ? identity : rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midInnerSphere);
         objects.midInnerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midInnerSphere);
 
         waitFac = 0.44;
@@ -175,7 +175,7 @@ namespace Project3 {
 
 
         pos = [3 * Math.cos(angle * 2), 0.5, 3 * Math.sin(angle * 2), 0];
-        sphereRot.midOuterSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midOuterSphere);
+        sphereRot.midOuterSphere = matMul(!isAnimating ? identity : rotateAxis(-1 / rotateTime * 360, pos), sphereRot.midOuterSphere);
         objects.midOuterSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midOuterSphere);
 
         waitFac = 0.46;
@@ -186,7 +186,7 @@ namespace Project3 {
 
 
         pos = [4 * Math.cos(angle), 0.5, 4 * Math.sin(angle), 0];
-        sphereRot.outerSphere = matMul(rotateAxis(-1 / rotateTime * 360, pos), sphereRot.outerSphere);
+        sphereRot.outerSphere = matMul(!isAnimating ? identity : rotateAxis(-1 / rotateTime * 360, pos), sphereRot.outerSphere);
         objects.outerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.outerSphere);
 
         waitFac = 0.48;
