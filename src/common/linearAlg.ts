@@ -104,6 +104,18 @@ function vecCross(v1: vec4, v2: vec4): vec4 {
 }
 
 /**
+ * calculate pairwise multiplication of two vectors
+ */
+function vecProd(v1: vec4, v2: vec4): vec4 {
+    return [
+        v1[0] * v2[0],
+        v1[1] * v2[1],
+        v1[2] * v2[2],
+        v1[3] * v2[3],
+    ];
+}
+
+/**
  * print a matrix
  */
 function matPrint(m: mat4): void {
