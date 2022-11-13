@@ -104,7 +104,7 @@ function vecCross(v1: vec4, v2: vec4): vec4 {
 }
 
 /**
- * calculate pairwise multiplication of two vectors
+ * calculate element-wise multiplication of two vectors
  */
 function vecProd(v1: vec4, v2: vec4): vec4 {
     return [
