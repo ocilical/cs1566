@@ -71,8 +71,9 @@ namespace Project3 {
 
         let positions: vec4[];
         let colors: vec4[];
+        let normals: vec4[];
 
-        [positions, colors, objects] = Project3.initScene();
+        [positions, colors, normals, objects] = Project3.initScene();
 
         // Load and compile shader programs
         let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
