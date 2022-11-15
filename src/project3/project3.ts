@@ -54,7 +54,7 @@ namespace Project3 {
         outerSphere: identity,
     };
 
-    const shininess = 10;
+    const shininess = 100;
     const attenuation_constant = 0;
     const attenuation_linear = 0;
     const attenuation_quadratic = 0.2;

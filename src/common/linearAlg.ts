@@ -58,6 +58,10 @@ function vecAdd(v1: vec4, v2: vec4): vec4 {
     ];
 }
 
+function vecSum(...args: vec4[]): vec4 {
+    return args.reduce((acc, curr) => vecAdd(curr, acc), [0, 0, 0, 0]);
+}
+
 /**
  * subtract two vectors, v1 - v2
  */

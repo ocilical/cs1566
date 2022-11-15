@@ -215,7 +215,7 @@ namespace Project3 {
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        normals.push(...Mesh.smoothSphereNormals(sphereSegments, sphereBands, Mesh.calcNormals(tempPos)));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.midInnerSphere = {
@@ -225,7 +225,7 @@ namespace Project3 {
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        normals.push(...Mesh.smoothSphereNormals(sphereSegments, sphereBands, Mesh.calcNormals(tempPos)));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.midOuterSphere = {
@@ -235,7 +235,7 @@ namespace Project3 {
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        normals.push(...Mesh.smoothSphereNormals(sphereSegments, sphereBands, Mesh.calcNormals(tempPos)));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands);
         objects.outerSphere = {
@@ -245,7 +245,7 @@ namespace Project3 {
         };
         positions.push(...tempPos);
         colors.push(...Mesh.twoColorSphere(tempPos.length / 3, [0.451, 0.941, 0.925, 1.0], [0.847, 0.506, 0.89, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        normals.push(...Mesh.smoothSphereNormals(sphereSegments, sphereBands, Mesh.calcNormals(tempPos)));
 
         tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(scale(0.2, 0.2, 0.2), v));
         objects.lightbulb = {

@@ -238,7 +238,7 @@ namespace Mesh {
         }
 
         // bottom triangle
-        segment.push(bot, old2, old1);
+        segment.push(old2, old1, bot);
 
         // build full sphere
         const res = [...segment];
