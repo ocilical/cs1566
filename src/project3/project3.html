@@ -6,11 +6,13 @@
 <script id="vertex-shader" type="x-shader/x-vertex">
   attribute vec4 vPosition;
   attribute vec4 vColor;
-  varying vec4 color;
+  attribute vec4 vNormal;
 
-  uniform mat4 ctm;
-  uniform mat4 model_view;
-  uniform mat4 projection;
+  varying vec4 color, N, L, V;
+  varying float distance;
+
+  uniform mat4 ctm, model_view, projection;
+  uniform vec4 light_position;
 
   // toRHR (to right-hand rule)
   // DO NOT MODIFY THE toRHR VARIABLE
@@ -24,6 +26,13 @@
     vec4 position = projection * model_view * ctm * vPosition;
     color = vColor;
 
+    N = normalize(model_view * ctm * vNormal);
+    vec4 L_temp = model_view * (light_position - ctm * vPosition);
+    L = normalize(L_temp);
+    vec4 eye_position = vec4(0.0, 0.0, 0.0, 1.0);
+    V = normalize(eye_position - (model_view * ctm * vPosition));
+    distance = length(L_temp);
+
     // DO NOT MODIFY THE NEXT LINE
     gl_Position = toRHR * position;
   }
@@ -33,11 +42,28 @@
 <script id="fragment-shader" type="x-shader/x-fragment">
     precision mediump float;
 
-    varying vec4 color;
+    varying vec4 color, N, L, V;
+    varying float distance;
+
+    uniform float shininess;
+    uniform float attenuation_constant, attenuation_linear, attenuation_quadratic;
+
+    vec4 ambient, diffuse, specular;
 
     void main()
     {
-	    gl_FragColor = color;
+	    vec4 NN = normalize(N);
+      vec4 VV = normalize(V);
+      vec4 LL = normalize(L);
+      ambient = color * 0.2;
+      vec4 H = normalize(LL + VV);
+      diffuse = max(dot(LL, NN), 0.0) * color;
+      specular = pow(max(dot(NN, H), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
+      float attenuation = 1.0/(attenuation_constant + (attenuation_linear * distance) +
+        (attenuation_quadratic * distance * distance));
+      vec4 tempC = ambient + attenuation * (diffuse + specular);
+
+      gl_FragColor = vec4(tempC.xyz, 1.0);
     }
   </script>
 

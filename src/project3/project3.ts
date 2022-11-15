@@ -7,6 +7,11 @@ namespace Project3 {
     let ctm_location: WebGLUniformLocation | null;
     let model_view_location: WebGLUniformLocation | null;
     let projection_location: WebGLUniformLocation | null;
+    let light_pos_location: WebGLUniformLocation | null;
+    let shininess_location: WebGLUniformLocation | null;
+    let constant_location: WebGLUniformLocation | null;
+    let linear_location: WebGLUniformLocation | null;
+    let quadratic_location: WebGLUniformLocation | null;
 
     export const identity: mat4 = [
         [1.0, 0.0, 0.0, 0.0],
@@ -49,6 +54,11 @@ namespace Project3 {
         outerSphere: identity,
     };
 
+    const shininess = 10;
+    const attenuation_constant = 0;
+    const attenuation_linear = 0;
+    const attenuation_quadratic = 0.2;
+
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
         if (!gl) {
@@ -84,11 +94,13 @@ namespace Project3 {
         // Allocate memory in a graphics card
         let buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, 4 * 4 * (positions.length + colors.length), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, 4 * 4 * (positions.length + colors.length + normals.length), gl.STATIC_DRAW);
         // Transfer positions and put it at the beginning of the buffer
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, to1DF32Array(positions));
         // Transfer colors and put it right after positions
         gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * positions.length, to1DF32Array(colors));
+        // Transfer normals and put it right after colors
+        gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * (positions.length + colors.length), to1DF32Array(normals));
 
         // Vertex Position - locate and enable "vPosition"
         let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
@@ -110,6 +122,17 @@ namespace Project3 {
         // vColor starts at the end of positions
         gl.vertexAttribPointer(vColor_location, 4, gl.FLOAT, false, 0, 4 * 4 * positions.length);
 
+        // Vertex Normal - locate and enable vNormal
+        let vNormal_location = gl.getAttribLocation(shaderProgram, "vNormal");
+        if (vNormal_location === -1) {
+            alert("Unable to locate vNormal");
+            return -1;
+        }
+        gl.enableVertexAttribArray(vNormal_location);
+        // vColor starts at the end of positions
+        gl.vertexAttribPointer(vNormal_location, 4, gl.FLOAT, false, 0, 4 * 4 * (positions.length + colors.length));
+
+
         // Current Transformation Matrix - locate and enable "ctm"
         ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
         if (ctm_location === null) {
@@ -128,6 +151,39 @@ namespace Project3 {
             return -1;
         }
 
+        light_pos_location = gl.getUniformLocation(shaderProgram, "light_position");
+        if (light_pos_location === null) {
+            alert("Unable to locate light_position");
+        }
+
+        shininess_location = gl.getUniformLocation(shaderProgram, "shininess");
+        if (shininess_location === null) {
+            alert("Unable to locate shininess");
+            return -1;
+        }
+        gl.uniform1f(shininess_location, shininess);
+
+        constant_location = gl.getUniformLocation(shaderProgram, "attenuation_constant");
+        if (constant_location === null) {
+            alert("Unable to locate attenuation_constant");
+            return -1;
+        }
+        gl.uniform1f(constant_location, attenuation_constant);
+
+        linear_location = gl.getUniformLocation(shaderProgram, "attenuation_linear");
+        if (linear_location === null) {
+            alert("Unable to locate attenuation_linear");
+            return -1;
+        }
+        gl.uniform1f(linear_location, attenuation_linear);
+
+        quadratic_location = gl.getUniformLocation(shaderProgram, "attenuation_quadratic");
+        if (quadratic_location === null) {
+            alert("Unable to locate attenuation_quadratic");
+            return -1;
+        }
+        gl.uniform1f(quadratic_location, attenuation_quadratic);
+
         return 0;
     }
 
@@ -140,6 +196,8 @@ namespace Project3 {
 
         gl.uniformMatrix4fv(model_view_location, false, to1DF32Array(model_view));
         gl.uniformMatrix4fv(projection_location, false, to1DF32Array(projection));
+
+        gl.uniform4fv(light_pos_location, new Float32Array(lightbulbPos));
 
         for (const key in objects) {
             const obj = objects[key];
