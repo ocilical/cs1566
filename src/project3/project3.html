@@ -40,31 +40,31 @@
 
 <!-- Fragment Shader -->
 <script id="fragment-shader" type="x-shader/x-fragment">
-    precision mediump float;
+  precision mediump float;
 
-    varying vec4 color, N, L, V;
-    varying float distance;
+  varying vec4 color, N, L, V;
+  varying float distance;
 
-    uniform float shininess;
-    uniform float attenuation_constant, attenuation_linear, attenuation_quadratic;
+  uniform float shininess;
+  uniform float attenuation_constant, attenuation_linear, attenuation_quadratic;
 
-    vec4 ambient, diffuse, specular;
+  vec4 ambient, diffuse, specular;
 
-    void main()
-    {
-	    vec4 NN = normalize(N);
-      vec4 VV = normalize(V);
-      vec4 LL = normalize(L);
-      ambient = color * 0.2;
-      vec4 H = normalize(LL + VV);
-      diffuse = max(dot(LL, NN), 0.0) * color;
-      specular = pow(max(dot(NN, H), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
-      float attenuation = 1.0/(attenuation_constant + (attenuation_linear * distance) +
-        (attenuation_quadratic * distance * distance));
-      vec4 tempC = ambient + attenuation * (diffuse + specular);
+  void main()
+  {
+    vec4 NN = normalize(N);
+    vec4 VV = normalize(V);
+    vec4 LL = normalize(L);
+    ambient = color * 0.2;
+    vec4 H = normalize(LL + VV);
+    diffuse = max(dot(LL, NN), 0.0) * color;
+    specular = pow(max(dot(NN, H), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
+    float attenuation = 1.0/(attenuation_constant + (attenuation_linear * distance) +
+      (attenuation_quadratic * distance * distance));
+    vec4 tempC = ambient + attenuation * (diffuse + specular);
 
-      gl_FragColor = vec4(tempC.xyz, 1.0);
-    }
+    gl_FragColor = vec4(tempC.xyz, 1.0);
+  }
   </script>
 
 <!-- Load user-defined libraries and programs -->
