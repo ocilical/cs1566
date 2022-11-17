@@ -255,7 +255,7 @@ namespace Project3 {
         };
         positions.push(...tempPos);
         colors.push(...Mesh.solidColor(tempPos.length / 3, [1.0, 1.0, 1.0, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        normals.push(...Mesh.calcSphereNormals(tempPos).map(v => vecScale(-1, v))); // flip normals
 
         return [positions, colors, normals, objects];
     }
