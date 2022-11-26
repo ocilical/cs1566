@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- Rename this file to something else -->
+
+<html>
+<!-- Vertex Shader -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+  attribute vec4 vColor;
+  attribute vec4 vNormal;
+
+  varying vec4 color, N, L, V;
+  varying float distance;
+
+  uniform mat4 ctm, model_view, projection;
+  uniform vec4 light_position;
+
+  // toRHR (to right-hand rule)
+  // DO NOT MODIFY THE toRHR VARIABLE
+  mat4 toRHR = mat4(vec4(1,0,0,0),
+        vec4(0,1,0,0),
+        vec4(0,0,-1,0),
+        vec4(0,0,0,1));
+
+  void main()
+  {
+    vec4 position = projection * model_view * ctm * vPosition;
+    color = vColor;
+
+    N = normalize(model_view * ctm * vNormal);
+    vec4 L_temp = model_view * (light_position - ctm * vPosition);
+    L = normalize(L_temp);
+    vec4 eye_position = vec4(0.0, 0.0, 0.0, 1.0);
+    V = normalize(eye_position - (model_view * ctm * vPosition));
+    distance = length(L_temp);
+
+    // DO NOT MODIFY THE NEXT LINE
+    gl_Position = toRHR * position;
+  }
+</script>
+
+<!-- Fragment Shader -->
+<script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying vec4 color, N, L, V;
+  varying float distance;
+
+  uniform float shininess;
+  uniform float attenuation_constant, attenuation_linear, attenuation_quadratic;
+
+  vec4 ambient, diffuse, specular;
+
+  void main()
+  {
+    vec4 NN = normalize(N);
+    vec4 VV = normalize(V);
+    vec4 LL = normalize(L);
+    ambient = color * 0.2;
+    vec4 H = normalize(LL + VV);
+    diffuse = max(dot(LL, NN), 0.0) * color;
+    specular = pow(max(dot(NN, H), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
+    float attenuation = 1.0/(attenuation_constant + (attenuation_linear * distance) +
+      (attenuation_quadratic * distance * distance));
+    vec4 tempC = ambient + attenuation * (diffuse + specular);
+
+    gl_FragColor = vec4(tempC.xyz, 1.0);
+  }
+</script>
+
+<!-- Load user-defined libraries and programs -->
+<script type="text/javascript" src="../common/initShaders.js"></script>
+<!-- Add more libraries here -->
+<script type="text/javascript" src="../common/linearAlg.js"></script>
+<script type="text/javascript" src="../common/mesh/primitives.js"></script>
+<script type="text/javascript" src="../common/mesh/normals.js"></script>
+<script type="text/javascript" src="../common/camera.js"></script>
+<!-- The main program -->
+<script type="text/javascript" src="scene.js"></script>
+<script type="text/javascript" src="project4.js"></script>
+
+<!-- HTML -->
+
+<head>
+  <title>robot arm</title>
+</head>
+
+<body onload="Project4.main();">
+  <h1>WebGL Canvas</h1>
+  <p>Your WebGL canvas is shown below:</p>
+  <canvas id="gl-canvas" width="512" height="512">
+    Sorry;
+  </canvas>
+  <!-- Below is a static part of the HTML which can be used for instruction
+         and/or explanation -->
+  <p>
+    Controls:
+    <ul>
+      <li>Use [Spacebar] to start/stop animation.</li>
+      <li>Use w/s to move camera up/down</li>
+      <li>Use a/d to move camera left/right</li>
+      <li>Use q/e to zoom camera out/in</li>
+      <li>Use i/k to move light on z axis</li>
+      <li>Use j/l to move light on x axis</li>
+      <li>Use u/o to move light on y azis</li>
+    </ul>
+  </p>
+</body>
+
+</html>
