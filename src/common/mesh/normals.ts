@@ -26,7 +26,8 @@ namespace Mesh {
 
     /**
      * calculate normals of a cylinder
-     * @param verts
+     * @param verts array of vertices, must be a cylinder
+     * @returns array of normals
      */
     export function calcCylNormals(verts: vec4[]): vec4[] {
         let res: vec4[] = [];
@@ -50,6 +51,11 @@ namespace Mesh {
         return res;
     }
 
+    /**
+     * calculate normals for a cone
+     * @param verts array of vertices, must be a cone
+     * @returns array of normals
+     */
     export function calcConeNormals(verts: vec4[]): vec4[] {
         let res: vec4[] = [];
         for (let i = 0; i < verts.length; i += 6) {

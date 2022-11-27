@@ -31,6 +31,7 @@ namespace Project4 {
     export interface Object {
         offset: number;
         verts: number;
+        basetrans: mat4,
         ctm: mat4;
     }
     let objects: { [key: string]: Object; } = {};
@@ -190,7 +191,7 @@ namespace Project4 {
 
         for (const key in objects) {
             const obj = objects[key];
-            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(obj.ctm));
+            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(matMul(obj.ctm, obj.basetrans)));
             gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
         }
 
