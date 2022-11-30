@@ -209,7 +209,9 @@ namespace Project4 {
         } else if (obj in ctmCache) {
             return ctmCache[obj];
         } else if (obj in objects) {
-            return matMul(applyParent(objects[obj].parent!), objects[obj].ctm);
+            let mat = matMul(applyParent(objects[obj].parent!), objects[obj].ctm);
+            ctmCache[obj] = mat;
+            return mat;
         } else {
             throw new Error(`object ${obj} does not exist`);
         }
