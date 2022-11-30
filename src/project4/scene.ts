@@ -163,7 +163,7 @@ namespace Project4 {
             parent: null,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.solidColor(tempPos.length / 3, armColor));
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.5, 0.5, 0.5, 1.0]));
         normals.push(...Mesh.calcNormals(tempPos));
 
         return [positions, colors, normals, objects];

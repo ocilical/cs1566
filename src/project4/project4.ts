@@ -52,7 +52,7 @@ namespace Project4 {
 
     const shininess = 100;
     const attenuation_constant = 0;
-    const attenuation_linear = 0.5;
+    const attenuation_linear = 0.2;
     const attenuation_quadratic = 0;
 
     let ctmCache: { [key: string]: mat4; };
