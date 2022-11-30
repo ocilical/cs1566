@@ -27,6 +27,7 @@ namespace Project4 {
     let viewRadius: number = 10;
     let viewInclination: number = 44;
     let viewAzimuth: number = 44;
+    let viewPos: vec4;
 
     export interface Object {
         offset: number;
@@ -37,13 +38,17 @@ namespace Project4 {
     }
     let objects: { [key: string]: Object; } = {};
 
-    export const sphereBands = 16;
-    export const sphereSegments = 32;
+    let baseRot = 0;
+    let joint1Rot = 0;
+    let joint2Rot = 0;
+    let joint3Rot = 0;
+    let wristRot = 0;
+    let clawPos = 0;
 
-    let lightbulbPos: vec4 = [0.0, 5.0, 0.0, 1.0];
-
-    let isAnimating = true;
-    let animTime = 0;
+    const rotSpeed = 5;
+    const clawStep = 0.05;
+    const clawMin = 0;
+    const clawMax = 0.6;
 
     const shininess = 100;
     const attenuation_constant = 0;
@@ -190,7 +195,7 @@ namespace Project4 {
         gl.uniformMatrix4fv(model_view_location, false, to1DF32Array(model_view));
         gl.uniformMatrix4fv(projection_location, false, to1DF32Array(projection));
 
-        gl.uniform4fv(light_pos_location, new Float32Array(lightbulbPos));
+        gl.uniform4fv(light_pos_location, new Float32Array(viewPos));
 
         ctmCache = {};
 
@@ -219,9 +224,7 @@ namespace Project4 {
 
     function idle() {
 
-        objects.lightbulb.ctm = translate(lightbulbPos[0], lightbulbPos[1], lightbulbPos[2]);
-
-        let viewPos: vec4 = [
+        viewPos = [
             viewRadius * Math.sin(degToRad(viewInclination)) * Math.cos(degToRad(viewAzimuth)),
             viewRadius * Math.cos(degToRad(viewInclination)),
             viewRadius * Math.sin(degToRad(viewInclination)) * Math.sin(degToRad(viewAzimuth)),
@@ -229,15 +232,16 @@ namespace Project4 {
         ];
         model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
 
-        objects.joint2.ctm = rotateZ(animTime, [0, 6, 0, 1]);
-        objects.joint3.ctm = rotateZ(-animTime / 2, [0, 10, 0, 1]);
-        objects.base.ctm = rotateY(animTime);
+        objects.base.ctm = rotateY(baseRot);
+        objects.joint1.ctm = rotateZ(joint1Rot, [0, 2, 0, 1]);
+        objects.joint2.ctm = rotateZ(joint2Rot, [0, 6, 0, 1]);
+        objects.joint3.ctm = rotateZ(joint3Rot, [0, 10, 0, 1]);
+        objects.wrist.ctm = rotateY(wristRot);
+        objects.finger1.ctm = translate(0, 0, clawPos);
+        objects.finger2.ctm = translate(0, 0, -clawPos);
 
         // Draw
         display();
-
-        if (isAnimating)
-            animTime++;
 
         requestAnimationFrame(idle);
     }
@@ -246,9 +250,6 @@ namespace Project4 {
     // This function will be called when a keyboard is pressed.
     function keyDownCallback(event: KeyboardEvent) {
         switch (event.key) {
-            case " ":
-                isAnimating = !isAnimating;
-                break;
             case "w":
             case "W":
                 viewInclination = Math.max(1, viewInclination - 2);
@@ -273,31 +274,52 @@ namespace Project4 {
             case "Q":
                 viewRadius = Math.min(100, viewRadius + 0.5);
                 break;
-            case "i":
-            case "I":
-                lightbulbPos = vecAdd(lightbulbPos, [0, 0, -0.1, 0]);
+            case "ArrowLeft":
+                baseRot -= rotSpeed;
                 break;
-            case "k":
-            case "K":
-                lightbulbPos = vecAdd(lightbulbPos, [0, 0, 0.1, 0]);
+            case "ArrowRight":
+                baseRot += rotSpeed;
+                break;
+            case "t":
+            case "T":
+                joint1Rot -= rotSpeed;
+                break;
+            case "g":
+            case "G":
+                joint1Rot += rotSpeed;
+                break;
+            case "y":
+            case "Y":
+                joint2Rot -= rotSpeed;
+                break;
+            case "h":
+            case "H":
+                joint2Rot += rotSpeed;
+                break;
+            case "u":
+            case "U":
+                joint3Rot -= rotSpeed;
                 break;
             case "j":
             case "J":
-                lightbulbPos = vecAdd(lightbulbPos, [-0.1, 0, 0, 0]);
+                joint3Rot += rotSpeed;
                 break;
-            case "l":
-            case "L":
-                lightbulbPos = vecAdd(lightbulbPos, [0.1, 0, 0, 0]);
+            case "i":
+            case "I":
+                wristRot -= rotSpeed;
+                break;
+            case "k":
+            case "K":
+                wristRot += rotSpeed;
                 break;
             case "o":
             case "O":
-                lightbulbPos = vecAdd(lightbulbPos, [0, 0.1, 0, 0]);
+                clawPos = Math.max(clawMin, clawPos - clawStep);
                 break;
-            case "u":
-            case "U ":
-                lightbulbPos = vecAdd(lightbulbPos, [0, -0.1, 0, 0]);
+            case "l":
+            case "L":
+                clawPos = Math.min(clawMax, clawPos + clawStep);
                 break;
-
         }
     }
 

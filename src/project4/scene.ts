@@ -166,18 +166,6 @@ namespace Project4 {
         colors.push(...Mesh.solidColor(tempPos.length / 3, armColor));
         normals.push(...Mesh.calcNormals(tempPos));
 
-        tempPos = Mesh.sphere(sphereSegments, sphereBands).map(v => matVecMul(scale(0.2, 0.2, 0.2), v));
-        objects.lightbulb = {
-            offset: positions.length,
-            verts: tempPos.length,
-            basetrans: identity,
-            ctm: translate(0.0, 5.0, 0.0),
-            parent: null,
-        };
-        positions.push(...tempPos);
-        colors.push(...Mesh.solidColor(tempPos.length / 3, [1.0, 1.0, 1.0, 1.0]));
-        normals.push(...Mesh.calcSphereNormals(tempPos).map(v => vecScale(-1, v))); // flip normals
-
         return [positions, colors, normals, objects];
     }
 }
