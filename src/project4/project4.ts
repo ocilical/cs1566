@@ -196,20 +196,20 @@ namespace Project4 {
 
         for (const key in objects) {
             const obj = objects[key];
-            const ctm = applyCtm(key);
+            const ctm = applyParent(key);
             gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(matMul(ctm, obj.basetrans)));
             gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
         }
 
     }
 
-    function applyCtm(obj: string): mat4 {
+    function applyParent(obj: string): mat4 {
         if (objects[obj].parent === null) {
             return objects[obj].ctm;
         } else if (obj in ctmCache) {
             return ctmCache[obj];
         } else if (obj in objects) {
-            return matMul(applyCtm(objects[obj].parent!), objects[obj].ctm);
+            return matMul(applyParent(objects[obj].parent!), objects[obj].ctm);
         } else {
             throw new Error(`object ${obj} does not exist`);
         }
