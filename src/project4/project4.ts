@@ -31,8 +31,9 @@ namespace Project4 {
     export interface Object {
         offset: number;
         verts: number;
-        basetrans: mat4,
+        basetrans: mat4;
         ctm: mat4;
+        parent: string | null;
     }
     let objects: { [key: string]: Object; } = {};
 
@@ -46,8 +47,10 @@ namespace Project4 {
 
     const shininess = 100;
     const attenuation_constant = 0;
-    const attenuation_linear = 0;
-    const attenuation_quadratic = 0.2;
+    const attenuation_linear = 0.5;
+    const attenuation_quadratic = 0;
+
+    let ctmCache: { [key: string]: mat4; };
 
     function initGL(canvas: HTMLCanvasElement) {
         gl = canvas.getContext("webgl");
@@ -189,12 +192,27 @@ namespace Project4 {
 
         gl.uniform4fv(light_pos_location, new Float32Array(lightbulbPos));
 
+        ctmCache = {};
+
         for (const key in objects) {
             const obj = objects[key];
-            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(matMul(obj.ctm, obj.basetrans)));
+            const ctm = applyCtm(key);
+            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(matMul(ctm, obj.basetrans)));
             gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
         }
 
+    }
+
+    function applyCtm(obj: string): mat4 {
+        if (objects[obj].parent === null) {
+            return objects[obj].ctm;
+        } else if (obj in ctmCache) {
+            return ctmCache[obj];
+        } else if (obj in objects) {
+            return matMul(applyCtm(objects[obj].parent!), objects[obj].ctm);
+        } else {
+            throw new Error(`object ${obj} does not exist`);
+        }
     }
 
     function idle() {
@@ -208,6 +226,10 @@ namespace Project4 {
             1.0,
         ];
         model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
+
+        objects.joint2.ctm = rotateZ(animTime, [0, 6, 0, 1]);
+        objects.joint3.ctm = rotateZ(-animTime / 2, [0, 10, 0, 1]);
+        objects.base.ctm = rotateY(animTime);
 
         // Draw
         display();
