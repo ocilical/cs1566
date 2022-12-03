@@ -8,11 +8,11 @@
   attribute vec4 vColor;
   attribute vec4 vNormal;
 
-  varying vec4 color, N, L, V;
-  varying float distance;
+  varying vec4 color, N, L, L2, V, pos, lpos2;
+  varying float distance, distance2;
 
   uniform mat4 ctm, model_view, projection;
-  uniform vec4 light_position;
+  uniform vec4 light_position, light_position2;
 
   // toRHR (to right-hand rule)
   // DO NOT MODIFY THE toRHR VARIABLE
@@ -27,11 +27,20 @@
     color = vColor;
 
     N = normalize(model_view * ctm * vNormal);
+
     vec4 L_temp = model_view * (light_position - ctm * vPosition);
+    vec4 L_temp2 = model_view * (light_position2 - ctm * vPosition);
+
     L = normalize(L_temp);
+    L2 = normalize(L_temp);
+
     vec4 eye_position = vec4(0.0, 0.0, 0.0, 1.0);
     V = normalize(eye_position - (model_view * ctm * vPosition));
     distance = length(L_temp);
+    distance2 = length(L_temp2);
+
+    pos = ctm * vPosition;;
+    lpos2 = light_position2;
 
     // DO NOT MODIFY THE NEXT LINE
     gl_Position = toRHR * position;
@@ -42,28 +51,48 @@
 <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
 
-  varying vec4 color, N, L, V;
-  varying float distance;
+  varying vec4 color, N, L, L2, V, pos, lpos2;
+  varying float distance, distance2;
+  varying mat4 model_view_pt;
 
   uniform float shininess;
   uniform float attenuation_constant, attenuation_linear, attenuation_quadratic;
 
-  vec4 ambient, diffuse, specular;
+  uniform vec4 spot_angle;
+
+  vec4 ambient, diffuse, diffuse2, specular, specular2;
+
+  const float spot_width = cos(0.8);
 
   void main()
   {
     vec4 NN = normalize(N);
     vec4 VV = normalize(V);
     vec4 LL = normalize(L);
+    vec4 LL2 = normalize(L2);
+
     ambient = color * 0.2;
+
     vec4 H = normalize(LL + VV);
+    vec4 H2 = normalize(LL2 + VV);
+
     diffuse = max(dot(LL, NN), 0.0) * color;
+    diffuse2 = max(dot(LL2, NN), 0.0) * color;
+
     specular = pow(max(dot(NN, H), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
+    specular2 = pow(max(dot(NN, H2), 0.0), shininess) * vec4(1.0, 1.0, 1.0, 1.0);
+
     float attenuation = 1.0/(attenuation_constant + (attenuation_linear * distance) +
       (attenuation_quadratic * distance * distance));
-    vec4 tempC = ambient + attenuation * (diffuse + specular);
+    float attenuation2 = 1.0/(attenuation_constant + (attenuation_linear * distance2) +
+      (attenuation_quadratic * distance2 * distance2));
 
-    gl_FragColor = vec4(tempC.xyz, 1.0);
+    bool in_spot = dot(normalize(-spot_angle), normalize(lpos2 - pos)) > spot_width;
+
+    vec4 tempC = ambient + attenuation * (diffuse + specular);
+    vec4 tempC2 = ambient + float(in_spot) * attenuation2 * (diffuse2 + specular2);
+
+    gl_FragColor = vec4(min(tempC.xyz + tempC2.xyz, vec3(1.0, 1.0, 1.0)), 1.0);
   }
 </script>
 

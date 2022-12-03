@@ -8,10 +8,12 @@ namespace Project4 {
     let model_view_location: WebGLUniformLocation | null;
     let projection_location: WebGLUniformLocation | null;
     let light_pos_location: WebGLUniformLocation | null;
+    let light_pos2_location: WebGLUniformLocation | null;
     let shininess_location: WebGLUniformLocation | null;
     let constant_location: WebGLUniformLocation | null;
     let linear_location: WebGLUniformLocation | null;
     let quadratic_location: WebGLUniformLocation | null;
+    let spot_angle_location: WebGLUniformLocation | null;
 
     export const identity: mat4 = [
         [1.0, 0.0, 0.0, 0.0],
@@ -52,8 +54,11 @@ namespace Project4 {
 
     const shininess = 100;
     const attenuation_constant = 0;
-    const attenuation_linear = 0.2;
-    const attenuation_quadratic = 0;
+    const attenuation_linear = 0;
+    const attenuation_quadratic = 0.2;
+
+    const spotPos: vec4 = [0, 14, 0, 1];
+    const spotAngle: vec4 = [0, 1.0, 0, 0];
 
     let ctmCache: { [key: string]: mat4; };
 
@@ -154,6 +159,11 @@ namespace Project4 {
             alert("Unable to locate light_position");
         }
 
+        light_pos2_location = gl.getUniformLocation(shaderProgram, "light_position2");
+        if (light_pos2_location === null) {
+            alert("Unable to locate light_position2");
+        }
+
         shininess_location = gl.getUniformLocation(shaderProgram, "shininess");
         if (shininess_location === null) {
             alert("Unable to locate shininess");
@@ -182,6 +192,12 @@ namespace Project4 {
         }
         gl.uniform1f(quadratic_location, attenuation_quadratic);
 
+        spot_angle_location = gl.getUniformLocation(shaderProgram, "spot_angle");
+        if (spot_angle_location === null) {
+            alert("Unable to locate spot_angle");
+            return -1;
+        }
+
         return 0;
     }
 
@@ -200,12 +216,19 @@ namespace Project4 {
         ctmCache = {};
 
         for (const key in objects) {
+            applyParent(key);
+        }
+
+        gl.uniform4fv(light_pos2_location, new Float32Array(matVecMul(ctmCache["palm"], spotPos)));
+        gl.uniform4fv(spot_angle_location, new Float32Array(matVecMul(ctmCache["palm"], spotAngle)));
+
+
+        for (const key in objects) {
             const obj = objects[key];
             const ctm = applyParent(key);
             gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(matMul(ctm, obj.basetrans)));
             gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
         }
-
     }
 
     function applyParent(obj: string): mat4 {

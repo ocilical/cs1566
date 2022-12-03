@@ -158,13 +158,25 @@ namespace Project4 {
         objects.floor = {
             offset: positions.length,
             verts: tempPos.length,
-            basetrans: composeTrans(translate(0, -0.5, 0), scale(10.0, 1.0, 10.0)),
+            basetrans: composeTrans(translate(0, -0.5, 0), scale(20.0, 1.0, 20.0)),
             ctm: identity,
             parent: null,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.5, 0.5, 0.5, 1.0]));
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [1, 1, 1, 1.0]));
         normals.push(...Mesh.calcNormals(tempPos));
+
+        tempPos = Mesh.sphere(32, 16);
+        objects.object = {
+            offset: positions.length,
+            verts: tempPos.length,
+            basetrans: composeTrans(translate(-10, 1, 0), scale(2.0, 2.0, 2.0)),
+            ctm: identity,
+            parent: null,
+        };
+        positions.push(...tempPos);
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [1, 1, 1, 1.0]));
+        normals.push(...Mesh.calcSphereNormals(tempPos));
 
         return [positions, colors, normals, objects];
     }
