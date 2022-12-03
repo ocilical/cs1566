@@ -58,7 +58,7 @@ namespace Project4 {
     const attenuation_quadratic = 0;
 
     const spotPos: vec4 = [0, 14, 0, 1];
-    const spotAngle: vec4 = [0, 1.0, 0, 0];
+    const spotAngle: vec4 = [0, 1, 0, 0];
 
     let ctmCache: { [key: string]: mat4; };
 
