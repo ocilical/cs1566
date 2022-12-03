@@ -154,7 +154,7 @@ namespace Project4 {
         colors.push(...Mesh.solidColor(tempPos.length / 3, armColor));
         normals.push(...Mesh.calcNormals(tempPos));
 
-        tempPos = Mesh.cube();
+        tempPos = Mesh.cylinder(cylinderRes);
         objects.floor = {
             offset: positions.length,
             verts: tempPos.length,
@@ -163,14 +163,14 @@ namespace Project4 {
             parent: null,
         };
         positions.push(...tempPos);
-        colors.push(...Mesh.solidColor(tempPos.length / 3, [1, 1, 1, 1.0]));
-        normals.push(...Mesh.calcNormals(tempPos));
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.416, 0.525, 0.831, 1.0]));
+        normals.push(...Mesh.calcCylNormals(tempPos));
 
         tempPos = Mesh.sphere(32, 16);
         objects.object = {
             offset: positions.length,
             verts: tempPos.length,
-            basetrans: composeTrans(translate(-10, 1, 0), scale(2.0, 2.0, 2.0)),
+            basetrans: composeTrans(translate(-5, 1, 0), scale(2.0, 2.0, 2.0)),
             ctm: identity,
             parent: null,
         };
