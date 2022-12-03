@@ -154,7 +154,7 @@ namespace Project4 {
         colors.push(...Mesh.solidColor(tempPos.length / 3, armColor));
         normals.push(...Mesh.calcNormals(tempPos));
 
-        tempPos = Mesh.cylinder(cylinderRes);
+        tempPos = Mesh.cylinder(cylinderRes * 2);
         objects.floor = {
             offset: positions.length,
             verts: tempPos.length,
@@ -167,7 +167,7 @@ namespace Project4 {
         normals.push(...Mesh.calcCylNormals(tempPos));
 
         tempPos = Mesh.sphere(32, 16);
-        objects.object = {
+        objects.object2 = {
             offset: positions.length,
             verts: tempPos.length,
             basetrans: composeTrans(translate(-5, 1, 0), scale(2.0, 2.0, 2.0)),
@@ -177,6 +177,42 @@ namespace Project4 {
         positions.push(...tempPos);
         colors.push(...Mesh.solidColor(tempPos.length / 3, [1, 1, 1, 1.0]));
         normals.push(...Mesh.calcSphereNormals(tempPos));
+
+        tempPos = Mesh.cone(cylinderRes);
+        objects.object1 = {
+            offset: positions.length,
+            verts: tempPos.length,
+            basetrans: composeTrans(translate(6, 1, 0), scale(2.0, 2.0, 2.0)),
+            ctm: identity,
+            parent: null,
+        };
+        positions.push(...tempPos);
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.961, 0.463, 0.553, 1.0]));
+        normals.push(...Mesh.calcConeNormals(tempPos));
+
+        tempPos = Mesh.cylinder(cylinderRes);
+        objects.object3 = {
+            offset: positions.length,
+            verts: tempPos.length,
+            basetrans: composeTrans(translate(0, 1, 7), scale(2.0, 2.0, 2.0)),
+            ctm: identity,
+            parent: null,
+        };
+        positions.push(...tempPos);
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.463, 0.961, 0.51, 1.0]));
+        normals.push(...Mesh.calcCylNormals(tempPos));
+
+        tempPos = Mesh.cube();
+        objects.object4 = {
+            offset: positions.length,
+            verts: tempPos.length,
+            basetrans: composeTrans(translate(0, 1, -7), scale(2.0, 2.0, 2.0)),
+            ctm: identity,
+            parent: null,
+        };
+        positions.push(...tempPos);
+        colors.push(...Mesh.solidColor(tempPos.length / 3, [0.961, 0.725, 0.463, 1.0]));
+        normals.push(...Mesh.calcNormals(tempPos));
 
         return [positions, colors, normals, objects];
     }

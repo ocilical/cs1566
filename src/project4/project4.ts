@@ -54,8 +54,8 @@ namespace Project4 {
 
     const shininess = 100;
     const attenuation_constant = 0;
-    const attenuation_linear = 0;
-    const attenuation_quadratic = 0.2;
+    const attenuation_linear = 0.4;
+    const attenuation_quadratic = 0;
 
     const spotPos: vec4 = [0, 14, 0, 1];
     const spotAngle: vec4 = [0, 1.0, 0, 0];
