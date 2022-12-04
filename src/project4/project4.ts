@@ -26,7 +26,7 @@ namespace Project4 {
     const projection: mat4 = Camera.frustum(-viewscale, viewscale, -viewscale, viewscale, -0.1, -100);
     let model_view: mat4 = Camera.lookAt([6, 6, 6, 1], [0, 0, 0, 1], [0, 1, 0, 0]);
 
-    let viewRadius: number = 10;
+    let viewRadius: number = 25;
     let viewInclination: number = 44;
     let viewAzimuth: number = 44;
     let viewPos: vec4;
