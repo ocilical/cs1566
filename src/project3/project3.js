@@ -1,0 +1,290 @@
+"use strict";
+var Project3;
+(function (Project3) {
+    // These variables must be global variables.
+    // Some callback functions may need to access them.
+    let gl;
+    let canvas;
+    let ctm_location;
+    let model_view_location;
+    let projection_location;
+    let light_pos_location;
+    let shininess_location;
+    let constant_location;
+    let linear_location;
+    let quadratic_location;
+    Project3.identity = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+    ];
+    const viewscale = 0.05;
+    const projection = Camera.frustum(-viewscale, viewscale, -viewscale, viewscale, -0.1, -100);
+    let model_view = Camera.lookAt([6, 6, 6, 1], [0, 0, 0, 1], [0, 1, 0, 0]);
+    let viewRadius = 10;
+    let viewInclination = 44;
+    let viewAzimuth = 44;
+    let objects = {};
+    Project3.sphereBands = 16;
+    Project3.sphereSegments = 32;
+    let lightbulbPos = [0.0, 5.0, 0.0, 1.0];
+    let isAnimating = true;
+    let animTime = 0;
+    const rotPerMin = 30;
+    const framesPerMin = 60 * 60;
+    const rotateTime = framesPerMin / rotPerMin;
+    let sphereRot = {
+        innerSphere: Project3.identity,
+        midInnerSphere: Project3.identity,
+        midOuterSphere: Project3.identity,
+        outerSphere: Project3.identity,
+    };
+    const shininess = 100;
+    const attenuation_constant = 0;
+    const attenuation_linear = 0;
+    const attenuation_quadratic = 0.2;
+    function initGL(canvas) {
+        gl = canvas.getContext("webgl");
+        if (!gl) {
+            alert("WebGL is not available...");
+            return -1;
+        }
+        // Set the clear screen color to black (R, G, B, A)
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // Enable hidden surface removal
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
+        return 0;
+    }
+    function init() {
+        if (!gl)
+            return -1;
+        let positions;
+        let colors;
+        let normals;
+        [positions, colors, normals, objects] = Project3.initScene();
+        // Load and compile shader programs
+        let shaderProgram = initShaders(gl, "vertex-shader", "fragment-shader");
+        if (shaderProgram === -1)
+            return -1;
+        gl.useProgram(shaderProgram);
+        // Allocate memory in a graphics card
+        let buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, 4 * 4 * (positions.length + colors.length + normals.length), gl.STATIC_DRAW);
+        // Transfer positions and put it at the beginning of the buffer
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, to1DF32Array(positions));
+        // Transfer colors and put it right after positions
+        gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * positions.length, to1DF32Array(colors));
+        // Transfer normals and put it right after colors
+        gl.bufferSubData(gl.ARRAY_BUFFER, 4 * 4 * (positions.length + colors.length), to1DF32Array(normals));
+        // Vertex Position - locate and enable "vPosition"
+        let vPosition_location = gl.getAttribLocation(shaderProgram, "vPosition");
+        if (vPosition_location === -1) {
+            alert("Unable to locate vPosition");
+            return -1;
+        }
+        gl.enableVertexAttribArray(vPosition_location);
+        // vPosition starts at offset 0
+        gl.vertexAttribPointer(vPosition_location, 4, gl.FLOAT, false, 0, 0);
+        // Vertex Color - locate and enable vColor
+        let vColor_location = gl.getAttribLocation(shaderProgram, "vColor");
+        if (vColor_location === -1) {
+            alert("Unable to locate vColor");
+            return -1;
+        }
+        gl.enableVertexAttribArray(vColor_location);
+        // vColor starts at the end of positions
+        gl.vertexAttribPointer(vColor_location, 4, gl.FLOAT, false, 0, 4 * 4 * positions.length);
+        // Vertex Normal - locate and enable vNormal
+        let vNormal_location = gl.getAttribLocation(shaderProgram, "vNormal");
+        if (vNormal_location === -1) {
+            alert("Unable to locate vNormal");
+            return -1;
+        }
+        gl.enableVertexAttribArray(vNormal_location);
+        // vColor starts at the end of positions
+        gl.vertexAttribPointer(vNormal_location, 4, gl.FLOAT, false, 0, 4 * 4 * (positions.length + colors.length));
+        // Current Transformation Matrix - locate and enable "ctm"
+        ctm_location = gl.getUniformLocation(shaderProgram, "ctm");
+        if (ctm_location === null) {
+            alert("Unable to locate ctm");
+            return -1;
+        }
+        model_view_location = gl.getUniformLocation(shaderProgram, "model_view");
+        if (model_view_location === null) {
+            alert("Unable to locate model_view");
+            return -1;
+        }
+        projection_location = gl.getUniformLocation(shaderProgram, "projection");
+        if (projection_location === null) {
+            alert("Unable to locate projection");
+            return -1;
+        }
+        light_pos_location = gl.getUniformLocation(shaderProgram, "light_position");
+        if (light_pos_location === null) {
+            alert("Unable to locate light_position");
+        }
+        shininess_location = gl.getUniformLocation(shaderProgram, "shininess");
+        if (shininess_location === null) {
+            alert("Unable to locate shininess");
+            return -1;
+        }
+        gl.uniform1f(shininess_location, shininess);
+        constant_location = gl.getUniformLocation(shaderProgram, "attenuation_constant");
+        if (constant_location === null) {
+            alert("Unable to locate attenuation_constant");
+            return -1;
+        }
+        gl.uniform1f(constant_location, attenuation_constant);
+        linear_location = gl.getUniformLocation(shaderProgram, "attenuation_linear");
+        if (linear_location === null) {
+            alert("Unable to locate attenuation_linear");
+            return -1;
+        }
+        gl.uniform1f(linear_location, attenuation_linear);
+        quadratic_location = gl.getUniformLocation(shaderProgram, "attenuation_quadratic");
+        if (quadratic_location === null) {
+            alert("Unable to locate attenuation_quadratic");
+            return -1;
+        }
+        gl.uniform1f(quadratic_location, attenuation_quadratic);
+        return 0;
+    }
+    function display() {
+        if (!gl) {
+            console.log("WebGL not initialized");
+            return;
+        }
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.uniformMatrix4fv(model_view_location, false, to1DF32Array(model_view));
+        gl.uniformMatrix4fv(projection_location, false, to1DF32Array(projection));
+        gl.uniform4fv(light_pos_location, new Float32Array(lightbulbPos));
+        for (const key in objects) {
+            const obj = objects[key];
+            gl.uniformMatrix4fv(ctm_location, false, to1DF32Array(obj.ctm));
+            gl.drawArrays(gl.TRIANGLES, obj.offset, obj.verts);
+        }
+    }
+    function idle() {
+        let angle = -2 * Math.PI * ((animTime % (rotateTime * 8)) / (rotateTime * 8));
+        // waitfac is just hand tweaked until it looks good
+        let pos = [Math.cos(angle * 8), 0.5, Math.sin(angle * 8), 0];
+        let rot = isAnimating ? rotateAxis(-1 / rotateTime * 360, pos) : Project3.identity;
+        sphereRot.innerSphere = matMul(rot, sphereRot.innerSphere);
+        objects.innerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.innerSphere);
+        let waitFac = 0.41;
+        objects.innerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8) - waitFac), 0);
+        objects.innerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + Math.PI / 2) - waitFac), 0);
+        objects.innerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + Math.PI) - waitFac), 0);
+        objects.innerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 8 + 3 * Math.PI / 2) - waitFac), 0);
+        pos = [2 * Math.cos(angle * 4), 0.5, 2 * Math.sin(angle * 4), 0];
+        rot = isAnimating ? rotateAxis(-1 / rotateTime * 360, pos) : Project3.identity;
+        sphereRot.midInnerSphere = matMul(rot, sphereRot.midInnerSphere);
+        objects.midInnerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midInnerSphere);
+        waitFac = 0.44;
+        objects.midInnerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4) - waitFac), 0);
+        objects.midInnerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + Math.PI / 2) - waitFac), 0);
+        objects.midInnerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + Math.PI) - waitFac), 0);
+        objects.midInnerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 4 + 3 * Math.PI / 2) - waitFac), 0);
+        pos = [3 * Math.cos(angle * 2), 0.5, 3 * Math.sin(angle * 2), 0];
+        rot = isAnimating ? rotateAxis(-1 / rotateTime * 360, pos) : Project3.identity;
+        sphereRot.midOuterSphere = matMul(rot, sphereRot.midOuterSphere);
+        objects.midOuterSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.midOuterSphere);
+        waitFac = 0.46;
+        objects.midOuterFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2) - waitFac), 0);
+        objects.midOuterRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + Math.PI / 2) - waitFac), 0);
+        objects.midOuterBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + Math.PI) - waitFac), 0);
+        objects.midOuterLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle * 2 + 3 * Math.PI / 2) - waitFac), 0);
+        pos = [4 * Math.cos(angle), 0.5, 4 * Math.sin(angle), 0];
+        rot = isAnimating ? rotateAxis(-1 / rotateTime * 360, pos) : Project3.identity;
+        sphereRot.outerSphere = matMul(rot, sphereRot.outerSphere);
+        objects.outerSphere.ctm = matMul(translate(pos[0], pos[1], pos[2]), sphereRot.outerSphere);
+        waitFac = 0.48;
+        objects.outerFrontCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle) - waitFac), 0);
+        objects.outerRightCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + Math.PI / 2) - waitFac), 0);
+        objects.outerBackCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + Math.PI) - waitFac), 0);
+        objects.outerLeftCube.ctm = translate(0, Math.min(0, (1 - waitFac) * Math.sin(angle + 3 * Math.PI / 2) - waitFac), 0);
+        objects.lightbulb.ctm = translate(lightbulbPos[0], lightbulbPos[1], lightbulbPos[2]);
+        let viewPos = [
+            viewRadius * Math.sin(degToRad(viewInclination)) * Math.cos(degToRad(viewAzimuth)),
+            viewRadius * Math.cos(degToRad(viewInclination)),
+            viewRadius * Math.sin(degToRad(viewInclination)) * Math.sin(degToRad(viewAzimuth)),
+            1.0,
+        ];
+        model_view = Camera.lookAt(viewPos, [0.0, 0.0, 0.0, 1.0], [0.0, 1.0, 0.0, 0.0]);
+        // Draw
+        display();
+        if (isAnimating)
+            animTime++;
+        requestAnimationFrame(idle);
+    }
+    // This function will be called when a keyboard is pressed.
+    function keyDownCallback(event) {
+        switch (event.key) {
+            case " ":
+                isAnimating = !isAnimating;
+                break;
+            case "w":
+            case "W":
+                viewInclination = Math.max(1, viewInclination - 2);
+                break;
+            case "s":
+            case "S":
+                viewInclination = Math.min(179, viewInclination + 2);
+                break;
+            case "a":
+            case "A":
+                viewAzimuth += 2;
+                break;
+            case "d":
+            case "D":
+                viewAzimuth -= 2;
+                break;
+            case "e":
+            case "E":
+                viewRadius = Math.max(1, viewRadius - 0.5);
+                break;
+            case "q":
+            case "Q":
+                viewRadius = Math.min(100, viewRadius + 0.5);
+                break;
+            case "i":
+            case "I":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0, -0.1, 0]);
+                break;
+            case "k":
+            case "K":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0, 0.1, 0]);
+                break;
+            case "j":
+            case "J":
+                lightbulbPos = vecAdd(lightbulbPos, [-0.1, 0, 0, 0]);
+                break;
+            case "l":
+            case "L":
+                lightbulbPos = vecAdd(lightbulbPos, [0.1, 0, 0, 0]);
+                break;
+            case "o":
+            case "O":
+                lightbulbPos = vecAdd(lightbulbPos, [0, 0.1, 0, 0]);
+                break;
+            case "u":
+            case "U ":
+                lightbulbPos = vecAdd(lightbulbPos, [0, -0.1, 0, 0]);
+                break;
+        }
+    }
+    function main() {
+        canvas = document.getElementById("gl-canvas");
+        if (initGL(canvas) === -1)
+            return -1;
+        if (init() === -1)
+            return -1;
+        document.addEventListener("keydown", keyDownCallback);
+        //display();
+        requestAnimationFrame(idle);
+    }
+    Project3.main = main;
+})(Project3 || (Project3 = {}));
